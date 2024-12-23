@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>子墨同学的AI设计提示词生成器</title>
+    <style>
+        .header {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .header h2 {
+            margin-top: 0;
+            color: #333;
+            font-weight: normal;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .category {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+
+        .keyword-btn {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .keyword-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .keyword-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            min-height: 100px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .result-text {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        #copy-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #copy-btn:hover {
+            background-color: #1976D2;
+        }
+
+        .language-toggle {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>子墨同学的</h1>
+        <h2>AI设计提示词生成器</h2>
+    </div>
+    <!-- 在清除按钮后添加随机灵感按钮 -->
+    <div class="button-group" style="margin-bottom: 20px;">
+        <button id="clear-all-btn" style="
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        ">清除所有选择</button>
+
+        <button id="random-inspiration-btn" style="
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        ">✨ 随机灵感</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">空间类型 / Space Type</div>
+
+        <!-- 居住空间 Residential -->
+        <button class="keyword-btn" data-category="space" data-en="luxury apartment interior">豪华公寓</button>
+        <button class="keyword-btn" data-category="space" data-en="boutique hotel room interior">精品酒店客房</button>
+        <button class="keyword-btn" data-category="space" data-en="designer homestay interior">设计师民宿</button>
+        <button class="keyword-btn" data-category="space" data-en="serviced apartment interior">服务式公寓</button>
+        <button class="keyword-btn" data-category="space" data-en="vacation villa interior">度假别墅</button>
+
+        <!-- 餐饮空间 F&B -->
+        <button class="keyword-btn" data-category="space" data-en="fine dining restaurant interior">高级餐厅</button>
+        <button class="keyword-btn" data-category="space" data-en="modern bistro interior">现代餐酒馆</button>
+        <button class="keyword-btn" data-category="space" data-en="specialty coffee shop interior">精品咖啡店</button>
+        <button class="keyword-btn" data-category="space" data-en="tea house interior">茶空间</button>
+        <button class="keyword-btn" data-category="space" data-en="dessert cafe interior">甜品店</button>
+        <button class="keyword-btn" data-category="space" data-en="bubble tea shop interior">奶茶店</button>
+
+        <!-- 休闲娱乐 Entertainment -->
+        <button class="keyword-btn" data-category="space" data-en="cocktail bar interior">鸡尾酒吧</button>
+        <button class="keyword-btn" data-category="space" data-en="wine bar interior">红酒吧</button>
+        <button class="keyword-btn" data-category="space" data-en="jazz lounge interior">爵士酒廊</button>
+        <button class="keyword-btn" data-category="space" data-en="rooftop bar interior">露台酒吧</button>
+        <button class="keyword-btn" data-category="space" data-en="entertainment club interior">娱乐会所</button>
+
+        <!-- 康养空间 Wellness -->
+        <button class="keyword-btn" data-category="space" data-en="luxury spa interior">豪华水疗会所</button>
+        <button class="keyword-btn" data-category="space" data-en="beauty salon interior">美容院</button>
+        <button class="keyword-btn" data-category="space" data-en="yoga studio interior">瑜伽馆</button>
+        <button class="keyword-btn" data-category="space" data-en="meditation center interior">冥想中心</button>
+        <button class="keyword-btn" data-category="space" data-en="fitness club interior">健身会所</button>
+
+        <!-- 文化展示 Cultural & Exhibition -->
+        <button class="keyword-btn" data-category="space" data-en="art gallery interior">艺术画廊</button>
+        <button class="keyword-btn" data-category="space" data-en="exhibition space interior">展览空间</button>
+        <button class="keyword-btn" data-category="space" data-en="design showroom interior">设计展厅</button>
+        <button class="keyword-btn" data-category="space" data-en="cultural center interior">文化中心</button>
+        <button class="keyword-btn" data-category="space" data-en="private museum interior">私人博物馆</button>
+
+        <!-- 工作创意 Workspace -->
+        <button class="keyword-btn" data-category="space" data-en="creative studio interior">创意工作室</button>
+        <button class="keyword-btn" data-category="space" data-en="boutique office interior">精品办公室</button>
+        <button class="keyword-btn" data-category="space" data-en="coworking space interior">共享工作空间</button>
+        <button class="keyword-btn" data-category="space" data-en="artist studio interior">艺术家工作室</button>
+        <button class="keyword-btn" data-category="space" data-en="photography studio interior">摄影工作室</button>
+
+        <!-- 零售空间 Retail -->
+        <button class="keyword-btn" data-category="space" data-en="luxury retail interior">奢侈品店</button>
+        <button class="keyword-btn" data-category="space" data-en="concept store interior">概念店</button>
+        <button class="keyword-btn" data-category="space" data-en="fashion boutique interior">时装精品店</button>
+        <button class="keyword-btn" data-category="space" data-en="lifestyle shop interior">生活方式店</button>
+        <button class="keyword-btn" data-category="space" data-en="designer brand store interior">设计师品牌店</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">设计风格 / Design Style</div>
+        
+        <!-- 当代风格（2010s-Present）-->
+        <button class="keyword-btn" data-category="style" data-en="parametric design">参数化设计</button>
+        <button class="keyword-btn" data-category="style" data-en="biophilic design">生物亲和</button>
+        <button class="keyword-btn" data-category="style" data-en="cyberpunk style">赛博朋克</button>
+        <button class="keyword-btn" data-category="style" data-en="digital minimalism">数字极简</button>
+        <button class="keyword-btn" data-category="style" data-en="sustainable modern">可持续现代</button>
+        <button class="keyword-btn" data-category="style" data-en="smart luxury">智能奢华</button>
+
+        <!-- 新世纪风格（2000s-2010s）-->
+        <button class="keyword-btn" data-category="style" data-en="modern oriental">新东方主义</button>
+        <button class="keyword-btn" data-category="style" data-en="modern chinoiserie">新中式</button>
+        <button class="keyword-btn" data-category="style" data-en="chinese contemporary">新中式当代</button>
+        <button class="keyword-btn" data-category="style" data-en="japandi">日式北欧</button>
+        <button class="keyword-btn" data-category="style" data-en="nordic minimalism">北欧极简</button>
+        <button class="keyword-btn" data-category="style" data-en="light luxury">轻奢风格</button>
+        <button class="keyword-btn" data-category="style" data-en="modern simplicity">现代简约</button>
+
+        <!-- 后现代风格（1980s-2000s）-->
+        <button class="keyword-btn" data-category="style" data-en="deconstructivism">解构主义</button>
+        <button class="keyword-btn" data-category="style" data-en="postmodern style">后现代主义</button>
+        <button class="keyword-btn" data-category="style" data-en="neo memphis">新孟菲斯</button>
+        <button class="keyword-btn" data-category="style" data-en="maximalism">极繁主义</button>
+        <button class="keyword-btn" data-category="style" data-en="industrial chic">工业时尚</button>
+
+        <!-- 现代主义风格（1920s-1980s）-->
+        <button class="keyword-btn" data-category="style" data-en="minimalist">极简主义</button>
+        <button class="keyword-btn" data-category="style" data-en="bauhaus style">包豪斯风格</button>
+        <button class="keyword-btn" data-category="style" data-en="modern luxury">现代奢华</button>
+        <button class="keyword-btn" data-category="style" data-en="scandinavian">北欧风格</button>
+        <button class="keyword-btn" data-category="style" data-en="mid-century modern">中世纪现代</button>
+        <button class="keyword-btn" data-category="style" data-en="brutalist">野兽主义</button>
+        <button class="keyword-btn" data-category="style" data-en="international style">国际主义</button>
+
+        <!-- 装饰艺术时期（1920s-1940s）-->
+        <button class="keyword-btn" data-category="style" data-en="art deco">装饰艺术</button>
+        <button class="keyword-btn" data-category="style" data-en="modern art deco">现代装饰派</button>
+        <button class="keyword-btn" data-category="style" data-en="streamline moderne">流线型现代</button>
+
+        <!-- 工艺美术运动（1880s-1920s）-->
+        <button class="keyword-btn" data-category="style" data-en="arts and crafts">工艺美术</button>
+        <button class="keyword-btn" data-category="style" data-en="art nouveau">新艺术运动</button>
+        <button class="keyword-btn" data-category="style" data-en="glasgow style">格拉斯哥派</button>
+
+        <!-- 折衷主义时期（1860s-1920s）-->
+        <button class="keyword-btn" data-category="style" data-en="victorian style">维多利亚</button>
+        <button class="keyword-btn" data-category="style" data-en="gothic revival">哥特复兴</button>
+        <button class="keyword-btn" data-category="style" data-en="beaux arts">博扎尔</button>
+
+        <!-- 新古典主义（1750s-1850s）-->
+        <button class="keyword-btn" data-category="style" data-en="neoclassical">新古典主义</button>
+        <button class="keyword-btn" data-category="style" data-en="empire style">帝国风格</button>
+        <button class="keyword-btn" data-category="style" data-en="federal style">联邦风格</button>
+
+        <!-- 巴洛克与洛可可（1600s-1750s）-->
+        <button class="keyword-btn" data-category="style" data-en="modern baroque">现代巴洛克</button>
+        <button class="keyword-btn" data-category="style" data-en="baroque style">巴洛克风格</button>
+        <button class="keyword-btn" data-category="style" data-en="rococo style">洛可可风格</button>
+
+        <!-- 文艺复兴时期（1400s-1600s）-->
+        <button class="keyword-btn" data-category="style" data-en="renaissance style">文艺复兴</button>
+        <button class="keyword-btn" data-category="style" data-en="palladian">帕拉第奥</button>
+
+        <!-- 现代演绎传统风格 -->
+        <button class="keyword-btn" data-category="style" data-en="modern classic">现代古典</button>
+        <button class="keyword-btn" data-category="style" data-en="contemporary zen">现代禅意</button>
+        <button class="keyword-btn" data-category="style" data-en="modern rustic">现代乡村</button>
+        <button class="keyword-btn" data-category="style" data-en="modern farmhouse">现代农舍</button>
+        <button class="keyword-btn" data-category="style" data-en="french classic">法式经典</button>
+        <button class="keyword-btn" data-category="style" data-en="british classic">英伦经典</button>
+
+        <!-- 地域特色风格 -->
+        <button class="keyword-btn" data-category="style" data-en="mediterranean">地中海风格</button>
+        <button class="keyword-btn" data-category="style" data-en="provence style">普罗旺斯</button>
+        <button class="keyword-btn" data-category="style" data-en="japanese zen">日式禅风</button>
+        <button class="keyword-btn" data-category="style" data-en="wabi-sabi">侘寂风格</button>
+        <button class="keyword-btn" data-category="style" data-en="tropical">热带度假风</button>
+        <button class="keyword-btn" data-category="style" data-en="coastal style">海岸风格</button>
+        <button class="keyword-btn" data-category="style" data-en="desert modern">沙漠现代</button>
+
+        <!-- 混合风格 -->
+        <button class="keyword-btn" data-category="style" data-en="eclectic modern">混搭现代</button>
+        <button class="keyword-btn" data-category="style" data-en="bohemian">波西米亚风</button>
+        <button class="keyword-btn" data-category="style" data-en="urban chic">都市摩登</button>
+        <button class="keyword-btn" data-category="style" data-en="retro vintage">复古怀旧</button>
+        
+        <!-- 奇幻故事风格 -->
+        <button class="keyword-btn" data-category="style" data-en="hobbit style">霍比特风格</button>
+        <button class="keyword-btn" data-category="style" data-en="elven style">精灵族风格</button>
+        <button class="keyword-btn" data-category="style" data-en="dwarven style">矮人族风格</button>
+        <button class="keyword-btn" data-category="style" data-en="cave dwelling">洞穴风格</button>
+        <button class="keyword-btn" data-category="style" data-en="treehouse fantasy">梦幻树屋风格</button>
+        <button class="keyword-btn" data-category="style" data-en="steampunk">蒸汽朋克</button>
+        <button class="keyword-btn" data-category="style" data-en="magical cottage">魔法小屋</button>
+        <button class="keyword-btn" data-category="style" data-en="wizard tower">巫师塔楼</button>
+        <button class="keyword-btn" data-category="style" data-en="fairy tale cottage">童话小屋</button>
+        <button class="keyword-btn" data-category="style" data-en="underwater palace">海底宫殿</button>
+        <button class="keyword-btn" data-category="style" data-en="floating castle">空中城堡</button>
+        <button class="keyword-btn" data-category="style" data-en="ghibli inspired">吉卜力风格</button>
+        <button class="keyword-btn" data-category="style" data-en="alice wonderland">爱丽丝梦游仙境</button>
+        <button class="keyword-btn" data-category="style" data-en="enchanted forest">魔法森林</button>
+        <button class="keyword-btn" data-category="style" data-en="crystal palace">水晶宫殿</button>
+        <button class="keyword-btn" data-category="style" data-en="ancient ruins">远古遗迹</button>
+        <button class="keyword-btn" data-category="style" data-en="mystical temple">神秘寺庙</button>
+        <button class="keyword-btn" data-category="style" data-en="dragon lair">龙之巢穴</button>
+        <button class="keyword-btn" data-category="style" data-en="ice castle">冰雪城堡</button>
+        <button class="keyword-btn" data-category="style" data-en="cloud kingdom">云端王国</button>
+
+        <!-- 多巴胺风格 -->
+        <button class="keyword-btn" data-category="style" data-en="dopamine design">多巴胺设计</button>
+        <button class="keyword-btn" data-category="style" data-en="playful minimalism">趣味极简</button>
+        <button class="keyword-btn" data-category="style" data-en="candy color modern">糖果色现代</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">功能区域 / Functional Areas</div>
+
+        <!-- 生活主区 Living Areas -->
+        <button class="keyword-btn" data-category="area" data-en="modern living room">现代客厅</button>
+        <button class="keyword-btn" data-category="area" data-en="open plan living space">开放式起居室</button>
+        <button class="keyword-btn" data-category="area" data-en="family lounge">家庭休息厅</button>
+        <button class="keyword-btn" data-category="area" data-en="conversation pit">下沉式交谈区</button>
+
+        <!-- 餐厨空间 Dining & Kitchen -->
+        <button class="keyword-btn" data-category="area" data-en="dining area">餐厅区域</button>
+        <button class="keyword-btn" data-category="area" data-en="open kitchen">开放式厨房</button>
+        <button class="keyword-btn" data-category="area" data-en="breakfast nook">早餐角</button>
+        <button class="keyword-btn" data-category="area" data-en="kitchen island">中岛厨房</button>
+        <button class="keyword-btn" data-category="area" data-en="bar counter">吧台区</button>
+
+        <!-- 休息区域 Resting Areas -->
+        <button class="keyword-btn" data-category="area" data-en="master bedroom suite">主卧套间</button>
+        <button class="keyword-btn" data-category="area" data-en="guest bedroom">客房</button>
+        <button class="keyword-btn" data-category="area" data-en="reading nook">阅读角</button>
+        <button class="keyword-btn" data-category="area" data-en="meditation space">冥想空间</button>
+        <button class="keyword-btn" data-category="area" data-en="window seat">飘窗休息区</button>
+
+        <!-- 工作学习区 Work & Study -->
+        <button class="keyword-btn" data-category="area" data-en="home office">家庭办公室</button>
+        <button class="keyword-btn" data-category="area" data-en="study corner">学习角</button>
+        <button class="keyword-btn" data-category="area" data-en="creative studio">创作工作室</button>
+        <button class="keyword-btn" data-category="area" data-en="meeting space">会议空间</button>
+
+        <!-- 卫浴空间 Bathroom Areas -->
+        <button class="keyword-btn" data-category="area" data-en="master bathroom">主卫生间</button>
+        <button class="keyword-btn" data-category="area" data-en="ensuite bathroom">套内卫浴</button>
+        <button class="keyword-btn" data-category="area" data-en="powder room">客用卫生间</button>
+        <button class="keyword-btn" data-category="area" data-en="spa bathroom">水疗浴室</button>
+
+        <!-- 收纳空间 Storage Areas -->
+        <button class="keyword-btn" data-category="area" data-en="walk-in closet">步入式衣帽间</button>
+        <button class="keyword-btn" data-category="area" data-en="storage room">储物室</button>
+        <button class="keyword-btn" data-category="area" data-en="utility room">多功能间</button>
+        <button class="keyword-btn" data-category="area" data-en="mudroom">玄关储物区</button>
+
+        <!-- 休闲娱乐 Entertainment -->
+        <button class="keyword-btn" data-category="area" data-en="home theater">家庭影院</button>
+        <button class="keyword-btn" data-category="area" data-en="game room">游戏室</button>
+        <button class="keyword-btn" data-category="area" data-en="music corner">音乐角</button>
+        <button class="keyword-btn" data-category="area" data-en="bar lounge">酒吧休息区</button>
+
+        <!-- 室内外过渡 Indoor-Outdoor -->
+        <button class="keyword-btn" data-category="area" data-en="covered terrace">覆盖式露台</button>
+        <button class="keyword-btn" data-category="area" data-en="indoor garden">室内花园</button>
+        <button class="keyword-btn" data-category="area" data-en="sunroom">阳光房</button>
+        <button class="keyword-btn" data-category="area" data-en="balcony lounge">阳台休息区</button>
+
+        <!-- 商业功能区 Commercial Areas -->
+        <button class="keyword-btn" data-category="area" data-en="reception area">接待区</button>
+        <button class="keyword-btn" data-category="area" data-en="waiting lounge">等候区</button>
+        <button class="keyword-btn" data-category="area" data-en="display area">展示区</button>
+        <button class="keyword-btn" data-category="area" data-en="service counter">服务台</button>
+
+        <!-- 特色休闲区 Specialty Leisure -->
+        <button class="keyword-btn" data-category="area" data-en="window bay seating">飘窗休憩区</button>
+        <button class="keyword-btn" data-category="area" data-en="tea ceremony corner">茶道角落</button>
+        <button class="keyword-btn" data-category="area" data-en="reading niche">阅读壁龛</button>
+        <button class="keyword-btn" data-category="area" data-en="hammock lounge">吊床休闲区</button>
+        <button class="keyword-btn" data-category="area" data-en="floor seating area">地台休闲区</button>
+
+        <!-- 特色餐饮区 Dining Features -->
+        <button class="keyword-btn" data-category="area" data-en="coffee station">咖啡吧台</button>
+        <button class="keyword-btn" data-category="area" data-en="wine tasting corner">��酒角落</button>
+        <button class="keyword-btn" data-category="area" data-en="breakfast bar">早餐吧台</button>
+        <button class="keyword-btn" data-category="area" data-en="tatami dining">榻榻米餐区</button>
+        <button class="keyword-btn" data-category="area" data-en="outdoor dining deck">户外用餐平台</button>
+
+        <!-- 卫浴特色区 Bathroom Features -->
+        <button class="keyword-btn" data-category="area" data-en="soaking tub area">泡澡浴缸区</button>
+        <button class="keyword-btn" data-category="area" data-en="rain shower space">雨淋花洒区</button>
+        <button class="keyword-btn" data-category="area" data-en="vanity station">梳妆台区</button>
+        <button class="keyword-btn" data-category="area" data-en="spa treatment area">水疗护理区</button>
+        <button class="keyword-btn" data-category="area" data-en="outdoor shower deck">户外淋浴平台</button>
+
+        <!-- 休憩特色区 Resting Features -->
+        <button class="keyword-btn" data-category="area" data-en="daybed nook">日光床休憩区</button>
+        <button class="keyword-btn" data-category="area" data-en="meditation corner">冥想角落</button>
+        <button class="keyword-btn" data-category="area" data-en="massage space">按摩空间</button>
+        <button class="keyword-btn" data-category="area" data-en="yoga platform">瑜伽平台</button>
+        <button class="keyword-btn" data-category="area" data-en="private sauna">私人桑拿间</button>
+
+        <!-- 景观特色区 View Features -->
+        <button class="keyword-btn" data-category="area" data-en="panoramic viewpoint">全景观景区</button>
+        <button class="keyword-btn" data-category="area" data-en="stargazing deck">观星平台</button>
+        <button class="keyword-btn" data-category="area" data-en="sunset viewing spot">观落日区</button>
+        <button class="keyword-btn" data-category="area" data-en="garden view terrace">花园景观台</button>
+        <button class="keyword-btn" data-category="area" data-en="infinity edge balcony">无边际阳台</button>
+
+        <!-- 储物功能区 Storage Features -->
+        <button class="keyword-btn" data-category="area" data-en="luggage storage">行李寄存区</button>
+        <button class="keyword-btn" data-category="area" data-en="wine cellar">酒窖储藏室</button>
+        <button class="keyword-btn" data-category="area" data-en="equipment room">器材储藏间</button>
+        <button class="keyword-btn" data-category="area" data-en="seasonal storage">季节性收纳区</button>
+        <button class="keyword-btn" data-category="area" data-en="cleaning supply room">清洁用品间</button>
+
+        <!-- 阳光房 -->
+        <button class="keyword-btn" data-category="area" data-en="sunroom">阳光房</button>
+        <!-- 露台休闲区 -->
+        <button class="keyword-btn" data-category="area" data-en="terrace lounge">露台休闲区</button>
+        <!-- 健身房 -->
+        <button class="keyword-btn" data-category="area" data-en="fitness room">健身房</button>
+        <!-- 瑜伽室 -->
+        <button class="keyword-btn" data-category="area" data-en="yoga studio">瑜伽室</button>
+        <!-- 茶室 -->
+        <button class="keyword-btn" data-category="area" data-en="tea room">茶室</button>
+        <!-- 酒窖 -->
+        <button class="keyword-btn" data-category="area" data-en="wine cellar">酒窖</button>
+        <!-- 儿童游戏室 -->
+        <button class="keyword-btn" data-category="area" data-en="kids playroom">儿童游戏室</button>
+        <!-- 艺术工作室 -->
+        <button class="keyword-btn" data-category="area" data-en="art studio">艺术工作室</button>
+
+        <!-- 观影室 -->
+        <button class="keyword-btn" data-category="area" data-en="screening room">观影室</button>
+        <!-- 棋牌室 -->
+        <button class="keyword-btn" data-category="area" data-en="game parlor">棋牌室</button>
+        <!-- 书吧 -->
+        <button class="keyword-btn" data-category="area" data-en="reading lounge">书吧</button>
+        <!-- 宠物区 -->
+        <button class="keyword-btn" data-category="area" data-en="pet area">宠物区</button>
+        <!-- 手工坊 -->
+        <button class="keyword-btn" data-category="area" data-en="craft studio">手工坊</button>
+        <!-- 冥想室 -->
+        <button class="keyword-btn" data-category="area" data-en="meditation room">冥想室</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">建筑特征 / Architectural Features</div>
+        <!-- 基础特征 -->
+        <button class="keyword-btn" data-category="architecture" data-en="curved ceiling design">弧形天花</button>
+        <button class="keyword-btn" data-category="architecture" data-en="organic curved wall">有机曲面墙</button>
+        <button class="keyword-btn" data-category="architecture" data-en="double-height space">挑高空间</button>
+        <button class="keyword-btn" data-category="architecture" data-en="floor-to-ceiling windows">落地窗</button>
+        <button class="keyword-btn" data-category="architecture" data-en="sunken living room">下沉式客厅</button>
+        <button class="keyword-btn" data-category="architecture" data-en="raised platform design">抬高空间</button>
+        <button class="keyword-btn" data-category="architecture" data-en="alcove space design">壁龛空间</button>
+
+        <!-- 空间设计手法 -->
+        <button class="keyword-btn" data-category="architecture" data-en="transparent partition design">透空隔断设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="borrowed scenery design">借景设计手法</button>
+        <button class="keyword-btn" data-category="architecture" data-en="layered space design">空间层次设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="spatial extension">空间延展设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="staggered level design">错落设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="cascading space">叠级空间</button>
+        <button class="keyword-btn" data-category="architecture" data-en="suspended design">悬浮设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="embedded design">嵌入式设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="interlocking space">空间穿插</button>
+        <button class="keyword-btn" data-category="architecture" data-en="enclosure design">围合设计</button>
+
+        <!-- 结构体量特征 -->
+        <button class="keyword-btn" data-category="architecture" data-en="box structure">盒子结构</button>
+        <button class="keyword-btn" data-category="architecture" data-en="staggered volumes">错体量</button>
+        <button class="keyword-btn" data-category="architecture" data-en="interlocking volumes">穿插体量</button>
+        <button class="keyword-btn" data-category="architecture" data-en="floating volume">漂浮体量</button>
+        <button class="keyword-btn" data-category="architecture" data-en="stacked volumes">叠加体量</button>
+        <button class="keyword-btn" data-category="architecture" data-en="split volumes">分割体量</button>
+        <button class="keyword-btn" data-category="architecture" data-en="framed view design">框景设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="modular combination">模块化组合</button>
+        <button class="keyword-btn" data-category="architecture" data-en="integrated design">一体化设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="transformable structure">可变结构</button>
+
+        <!-- 垂直元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="sculptural column design">雕塑感立柱</button>
+        <button class="keyword-btn" data-category="architecture" data-en="feature wall design">特色墙面</button>
+        <button class="keyword-btn" data-category="architecture" data-en="artistic partition">艺术隔断</button>
+        <button class="keyword-btn" data-category="architecture" data-en="layered wall design">层叠墙面</button>
+        <button class="keyword-btn" data-category="architecture" data-en="curved wall feature">曲面造型墙</button>
+
+        <!-- 水平元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="floating platform design">悬浮平台</button>
+        <button class="keyword-btn" data-category="architecture" data-en="sculptural ceiling">雕塑感天花</button>
+        <button class="keyword-btn" data-category="architecture" data-en="stepped floor design">阶梯式地面</button>
+        <button class="keyword-btn" data-category="architecture" data-en="platform combination">平台组合</button>
+        <button class="keyword-btn" data-category="architecture" data-en="level change design">高差设计</button>
+
+        <!-- 空间界定元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="transparent screen">透明屏风</button>
+        <button class="keyword-btn" data-category="architecture" data-en="light partition">光影隔断</button>
+        <button class="keyword-btn" data-category="architecture" data-en="floating shelf divider">悬浮架隔断</button>
+        <button class="keyword-btn" data-category="architecture" data-en="green divider">植物隔断</button>
+        <button class="keyword-btn" data-category="architecture" data-en="artistic screen">艺术屏风</button>
+
+        <!-- 功能性元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="built-in seating">嵌入式座椅</button>
+        <button class="keyword-btn" data-category="architecture" data-en="integrated storage">一体化收纳</button>
+        <button class="keyword-btn" data-category="architecture" data-en="display niche">展示凹槽</button>
+        <button class="keyword-btn" data-category="architecture" data-en="reading alcove">阅读壁龛</button>
+        <button class="keyword-btn" data-category="architecture" data-en="multimedia wall">多媒体墙面</button>
+
+        <!-- 空间形态 -->
+        <button class="keyword-btn" data-category="architecture" data-en="fan-shaped layout">扇形布局</button>
+        <button class="keyword-btn" data-category="architecture" data-en="circular layout">环形布局</button>
+        <button class="keyword-btn" data-category="architecture" data-en="radial layout">放射状布局</button>
+        <button class="keyword-btn" data-category="architecture" data-en="flowing curves">流动曲线</button>
+
+        <!-- 装饰性建筑元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="carved wall reliefs">浮雕墙面</button>
+        <button class="keyword-btn" data-category="architecture" data-en="mythical sculptures">神话雕塑</button>
+        <button class="keyword-btn" data-category="architecture" data-en="ornate wall patterns">华丽墙纹</button>
+        <button class="keyword-btn" data-category="architecture" data-en="crystal wall inlays">水晶镶嵌</button>
+        <button class="keyword-btn" data-category="architecture" data-en="luminous patterns">发光纹路</button>
+        <button class="keyword-btn" data-category="architecture" data-en="floating crystal fragments">悬浮晶体</button>
+
+        <!-- 空间结构元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="levitating platforms">悬浮平台</button>
+        <button class="keyword-btn" data-category="architecture" data-en="magical portal frames">魔法门框</button>
+        <button class="keyword-btn" data-category="architecture" data-en="energy flow channels">能量流动槽</button>
+        <button class="keyword-btn" data-category="architecture" data-en="holographic displays">全息显示</button>
+        <button class="keyword-btn" data-category="architecture" data-en="light bridges">光桥连接</button>
+        <button class="keyword-btn" data-category="architecture" data-en="floating stairs">漂浮阶梯</button>
+
+        <!-- 天花设计 -->
+        <button class="keyword-btn" data-category="architecture" data-en="constellation ceiling">星座天顶</button>
+        <button class="keyword-btn" data-category="architecture" data-en="crystal chandelier structure">水晶灯架构</button>
+        <button class="keyword-btn" data-category="architecture" data-en="floating light orbs">悬浮光球</button>
+        <button class="keyword-btn" data-category="architecture" data-en="nebula ceiling effect">星云天花效果</button>
+        <button class="keyword-btn" data-category="architecture" data-en="geometric light grid">几何光栅</button>
+
+        <!-- 墙面特效 -->
+        <button class="keyword-btn" data-category="architecture" data-en="interactive light walls">互动光墙</button>
+        <button class="keyword-btn" data-category="architecture" data-en="flowing water walls">流水墙面</button>
+        <button class="keyword-btn" data-category="architecture" data-en="living plant walls">生态植物墙</button>
+        <button class="keyword-btn" data-category="architecture" data-en="energy crystal walls">能量晶壁</button>
+        <button class="keyword-btn" data-category="architecture" data-en="ancient rune patterns">古代符文</button>
+
+        <!-- 空间氛围元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="floating particles">漂浮粒子</button>
+        <button class="keyword-btn" data-category="architecture" data-en="magical light beams">魔法光束</button>
+        <button class="keyword-btn" data-category="architecture" data-en="ethereal mist">空灵薄雾</button>
+        <button class="keyword-btn" data-category="architecture" data-en="energy field">能量场</button>
+        <button class="keyword-btn" data-category="architecture" data-en="time fragments">时间碎片</button>
+
+        <!-- 结构细节 -->
+        <button class="keyword-btn" data-category="architecture" data-en="biomechanical details">生物机械细节</button>
+        <button class="keyword-btn" data-category="architecture" data-en="ancient tech patterns">古代科技纹路</button>
+        <button class="keyword-btn" data-category="architecture" data-en="magical circuits">魔法回路</button>
+        <button class="keyword-btn" data-category="architecture" data-en="energy conduits">能量管道</button>
+        <button class="keyword-btn" data-category="architecture" data-en="crystalline growth">晶体生长结构</button>
+
+        <!-- 观景元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="dimensional windows">次元之窗</button>
+        <button class="keyword-btn" data-category="architecture" data-en="portal viewpoints">传送门景观</button>
+        <button class="keyword-btn" data-category="architecture" data-en="space-time windows">时空之窗</button>
+        <button class="keyword-btn" data-category="architecture" data-en="reality fragments">现实碎片</button>
+        <button class="keyword-btn" data-category="architecture" data-en="mirror dimensions">镜像维度</button>
+
+        <!-- 添加奇幻元素的现实转化 -->
+        <button class="keyword-btn" data-category="architecture" data-en="cloud-shaped ceiling">云朵造型天花</button>
+        <button class="keyword-btn" data-category="architecture" data-en="star light ceiling">星光点缀天花</button>
+        <button class="keyword-btn" data-category="architecture" data-en="castle window frames">城堡窗框造型</button>
+        <button class="keyword-btn" data-category="architecture" data-en="ice crystal textures">冰晶质感表面</button>
+        <button class="keyword-btn" data-category="architecture" data-en="floating cloud furniture">云朵漂浮家具</button>
+        <button class="keyword-btn" data-category="architecture" data-en="forest canopy ceiling">森林穹顶效果</button>
+        <button class="keyword-btn" data-category="architecture" data-en="underwater wave walls">水波纹墙面</button>
+        <button class="keyword-btn" data-category="architecture" data-en="magical portal doorway">魔法门框造型</button>
+
+        <!-- 一体化设计元素 -->
+        <button class="keyword-btn" data-category="architecture" data-en="wall-ceiling integration">墙面天花一体化</button>
+        <button class="keyword-btn" data-category="architecture" data-en="furniture-wall fusion">家具墙面融合</button>
+        <button class="keyword-btn" data-category="architecture" data-en="ceiling-floor connection">顶面地面贯通</button>
+        <button class="keyword-btn" data-category="architecture" data-en="bar-ceiling integration">吧台顶面一体化</button>
+        <button class="keyword-btn" data-category="architecture" data-en="shelf-stairs combination">书架楼梯结合</button>
+        <button class="keyword-btn" data-category="architecture" data-en="seating-platform fusion">座椅平台融合</button>
+        <button class="keyword-btn" data-category="architecture" data-en="storage-display integration">储物展示一体化</button>
+        <button class="keyword-btn" data-category="architecture" data-en="continuous surface design">连续曲面设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="flowing space transition">空间流动过渡</button>
+        <button class="keyword-btn" data-category="architecture" data-en="sculptural integration">雕塑性一体化</button>
+        <button class="keyword-btn" data-category="architecture" data-en="material continuity">材质连续性设计</button>
+        <button class="keyword-btn" data-category="architecture" data-en="functional integration">功能一体化设计</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">材质肌理 / Textures</div>
+        <!-- 石材类 -->
+        <button class="keyword-btn" data-category="texture" data-en="polished marble">抛光大理石</button>
+        <button class="keyword-btn" data-category="texture" data-en="rough stone">粗糙石材</button>
+        <button class="keyword-btn" data-category="texture" data-en="terrazzo flooring">水磨地面</button>
+        <button class="keyword-btn" data-category="texture" data-en="travertine stone">洞石材质</button>
+        
+        <!-- 木材类 -->
+        <button class="keyword-btn" data-category="texture" data-en="natural wood grain">原木纹理</button>
+        <button class="keyword-btn" data-category="texture" data-en="reclaimed timber">复古木材</button>
+        <button class="keyword-btn" data-category="texture" data-en="charred wood">炭化木材</button>
+        <button class="keyword-btn" data-category="texture" data-en="bamboo texture">竹材质感</button>
+        
+        <!-- 金属类 -->
+        <button class="keyword-btn" data-category="texture" data-en="brushed brass">拉丝黄铜</button>
+        <button class="keyword-btn" data-category="texture" data-en="aged copper">做旧铜材</button>
+        <button class="keyword-btn" data-category="texture" data-en="polished steel">抛光钢材</button>
+        <button class="keyword-btn" data-category="texture" data-en="perforated metal">穿孔金属</button>
+        
+        <!-- 混凝土类 -->
+        <button class="keyword-btn" data-category="texture" data-en="exposed concrete">清水混凝土</button>
+        <button class="keyword-btn" data-category="texture" data-en="polished concrete">抛光混凝土</button>
+        <button class="keyword-btn" data-category="texture" data-en="textured concrete">肌理混凝土</button>
+        
+        <!-- 织物类 -->
+        <button class="keyword-btn" data-category="texture" data-en="woven textile">编织织物</button>
+        <button class="keyword-btn" data-category="texture" data-en="natural linen">天然亚麻</button>
+        <button class="keyword-btn" data-category="texture" data-en="velvet fabric">丝绒面料</button>
+        <button class="keyword-btn" data-category="texture" data-en="leather upholstery">皮革包覆</button>
+        
+        <!-- 玻璃类 -->
+        <button class="keyword-btn" data-category="texture" data-en="frosted glass">磨砂玻璃</button>
+        <button class="keyword-btn" data-category="texture" data-en="fluted glass">条纹玻璃</button>
+        <button class="keyword-btn" data-category="texture" data-en="textured glass">纹理玻璃</button>
+        
+        <!-- 特殊材质 -->
+        <button class="keyword-btn" data-category="texture" data-en="rattan weave">藤编织物</button>
+        <button class="keyword-btn" data-category="texture" data-en="handmade ceramic">手工陶瓷</button>
+        <button class="keyword-btn" data-category="texture" data-en="venetian plaster">威尼斯灰泥</button>
+        <button class="keyword-btn" data-category="texture" data-en="microcement">微水泥</button>
+        <button class="keyword-btn" data-category="texture" data-en="cork material">软木材质</button>
+        <button class="keyword-btn" data-category="texture" data-en="woven grass">草编织物</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">光线氛围 / Lighting Atmosphere</div>
+        <button class="keyword-btn" data-category="lighting" data-en="soft morning light">柔和晨光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="dramatic shadows">戏剧性光影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="warm ambient">温暖米色氛围光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="natural sunlight">自然日光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="sunset glow">日落余晖</button>
+        <button class="keyword-btn" data-category="lighting" data-en="indirect lighting">间接照明</button>
+        <button class="keyword-btn" data-category="lighting" data-en="dappled sunlight">斑驳日光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="candlelight">烛光氛围</button>
+        <button class="keyword-btn" data-category="lighting" data-en="hidden LED strips">隐藏式LED</button>
+        <button class="keyword-btn" data-category="lighting" data-en="moonlight reflection">月光倒影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="starry lighting">星光照明</button>
+        <button class="keyword-btn" data-category="lighting" data-en="fire pit glow">篝火光影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="diffused daylight">漫射日光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="morning rays">晨曦光线</button>
+        <button class="keyword-btn" data-category="lighting" data-en="afternoon glow">午后光晕</button>
+        <button class="keyword-btn" data-category="lighting" data-en="golden sunbeams">金色光束</button>
+        <button class="keyword-btn" data-category="lighting" data-en="filtered light">过滤光线</button>
+        <button class="keyword-btn" data-category="lighting" data-en="ambient glow">环境光晕</button>
+        <button class="keyword-btn" data-category="lighting" data-en="accent lighting">重点照明</button>
+        <button class="keyword-btn" data-category="lighting" data-en="cove lighting">槽灯照明</button>
+        <button class="keyword-btn" data-category="lighting" data-en="wall washing">洗墙光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="grazing light">擦墙光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="backlit panels">背光板</button>
+        <button class="keyword-btn" data-category="lighting" data-en="silhouette lighting">剪影光效</button>
+        <button class="keyword-btn" data-category="lighting" data-en="rim lighting">边缘光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="pool reflections">水面反光</button>
+        <button class="keyword-btn" data-category="lighting" data-en="crystal reflections">水晶折射</button>
+        <button class="keyword-btn" data-category="lighting" data-en="mirror reflections">镜面反射</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light sculptures">光影雕塑</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light patterns">光影图案</button>
+        <button class="keyword-btn" data-category="lighting" data-en="shadow play">光影游戏</button>
+        <button class="keyword-btn" data-category="lighting" data-en="moody lighting">氛围光效</button>
+        <button class="keyword-btn" data-category="lighting" data-en="ethereal glow">空灵光晕</button>
+        <button class="keyword-btn" data-category="lighting" data-en="lantern light">灯笼光影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="string lights">串灯光效</button>
+        <button class="keyword-btn" data-category="lighting" data-en="underwater lighting">水下照明</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light through leaves">叶影光斑</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light through blinds">百叶光影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light through curtains">帘纱光影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light through stained glass">彩窗光影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light through rain">雨中光影</button>
+        <button class="keyword-btn" data-category="lighting" data-en="light through fog">雾中光晕</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">色彩方案 / Color Scheme</div>
+        <button class="keyword-btn" data-category="color" data-en="cream white">奶油白</button>
+        <button class="keyword-btn" data-category="color" data-en="warm beige">温暖米色</button>
+        <button class="keyword-btn" data-category="color" data-en="earth tones">大地色系</button>
+        <button class="keyword-btn" data-category="color" data-en="neutral palette">中性色调</button>
+        <button class="keyword-btn" data-category="color" data-en="sage green">鼠尾草绿</button>
+        <button class="keyword-btn" data-category="color" data-en="terracotta">赤陶色</button>
+        <button class="keyword-btn" data-category="color" data-en="desert sand">沙漠金</button>
+        <button class="keyword-btn" data-category="color" data-en="ocean blue">海洋蓝</button>
+        <button class="keyword-btn" data-category="color" data-en="forest green">森林绿</button>
+        <button class="keyword-btn" data-category="color" data-en="charcoal gray">炭灰色</button>
+        <button class="keyword-btn" data-category="color" data-en="clay pink">陶土粉</button>
+        <button class="keyword-btn" data-category="color" data-en="olive green">橄榄绿</button>
+        <button class="keyword-btn" data-category="color" data-en="misty gray">雾灰色</button>
+        <button class="keyword-btn" data-category="color" data-en="dusty pink">灰粉色</button>
+        <button class="keyword-btn" data-category="color" data-en="sand beige">沙米色</button>
+        <button class="keyword-btn" data-category="color" data-en="ivory white">象牙白</button>
+        <button class="keyword-btn" data-category="color" data-en="almond white">杏仁白</button>
+        <button class="keyword-btn" data-category="color" data-en="oyster gray">牡蛎灰</button>
+        <button class="keyword-btn" data-category="color" data-en="dove gray">鸽灰色</button>
+        <button class="keyword-btn" data-category="color" data-en="taupe">褐灰色</button>
+        <button class="keyword-btn" data-category="color" data-en="greige">灰米色</button>
+        <button class="keyword-btn" data-category="color" data-en="stone gray">石灰色</button>
+        <button class="keyword-btn" data-category="color" data-en="pewter">锡灰色</button>
+        <button class="keyword-btn" data-category="color" data-en="moss green">苔藓绿</button>
+        <button class="keyword-btn" data-category="color" data-en="eucalyptus green">尤加利绿</button>
+        <button class="keyword-btn" data-category="color" data-en="celadon">青瓷色</button>
+        <button class="keyword-btn" data-category="color" data-en="mint green">薄荷绿</button>
+        <button class="keyword-btn" data-category="color" data-en="lichen green">地衣绿</button>
+        <button class="keyword-btn" data-category="color" data-en="clay brown">陶土棕</button>
+        <button class="keyword-btn" data-category="color" data-en="rust brown">锈棕色</button>
+        <button class="keyword-btn" data-category="color" data-en="sienna">赭石色</button>
+        <button class="keyword-btn" data-category="color" data-en="ochre">赭黄色</button>
+        <button class="keyword-btn" data-category="color" data-en="caramel">焦糖色</button>
+        <button class="keyword-btn" data-category="color" data-en="tobacco brown">烟草棕</button>
+        <button class="keyword-btn" data-category="color" data-en="slate blue">岩蓝色</button>
+        <button class="keyword-btn" data-category="color" data-en="steel blue">钢青色</button>
+        <button class="keyword-btn" data-category="color" data-en="stormy blue">风暴蓝</button>
+        <button class="keyword-btn" data-category="color" data-en="aegean blue">爱琴蓝</button>
+        <button class="keyword-btn" data-category="color" data-en="deep teal">深青色</button>
+        <button class="keyword-btn" data-category="color" data-en="petrol blue">石油蓝</button>
+        <button class="keyword-btn" data-category="color" data-en="dusty mauve">灰紫色</button>
+        <button class="keyword-btn" data-category="color" data-en="lavender gray">薰衣草灰</button>
+        <button class="keyword-btn" data-category="color" data-en="plum gray">李子灰</button>
+        <button class="keyword-btn" data-category="color" data-en="rose dust">玫瑰灰</button>
+        <button class="keyword-btn" data-category="color" data-en="blush pink">腮红粉</button>
+        <button class="keyword-btn" data-category="color" data-en="shell pink">贝壳粉</button>
+        <button class="keyword-btn" data-category="color" data-en="bone white">骨白色</button>
+        <button class="keyword-btn" data-category="color" data-en="parchment">羊皮纸色</button>
+        <button class="keyword-btn" data-category="color" data-en="film grain">胶片颗粒</button>
+        <button class="keyword-btn" data-category="color" data-en="candy pink">糖果粉</button>
+        <button class="keyword-btn" data-category="color" data-en="bubble gum blue">泡泡糖蓝</button>
+        <button class="keyword-btn" data-category="color" data-en="lemon yellow">柠檬黄</button>
+        <button class="keyword-btn" data-category="color" data-en="coral pink">珊瑚粉</button>
+        <button class="keyword-btn" data-category="color" data-en="lavender purple">薰衣草紫</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">植物装饰 / Plants & Decoration</div>
+        <button class="keyword-btn" data-category="plants" data-en="tall cactus">高大仙人掌</button>
+        <button class="keyword-btn" data-category="plants" data-en="hanging plants">垂挂植物</button>
+        <button class="keyword-btn" data-category="plants" data-en="potted plants">盆栽绿植</button>
+        <button class="keyword-btn" data-category="plants" data-en="dried flowers">干花装饰</button>
+        <button class="keyword-btn" data-category="plants" data-en="olive tree">橄榄树</button>
+        <button class="keyword-btn" data-category="plants" data-en="monstera">龟背竹</button>
+        <button class="keyword-btn" data-category="plants" data-en="bird of paradise">天堂鸟</button>
+        <button class="keyword-btn" data-category="plants" data-en="pampas grass">蒲苇草</button>
+        <button class="keyword-btn" data-category="plants" data-en="eucalyptus">尤加利</button>
+        <button class="keyword-btn" data-category="plants" data-en="living wall">植物墙</button>
+        <button class="keyword-btn" data-category="plants" data-en="zen garden">禅意花园</button>
+        <button class="keyword-btn" data-category="plants" data-en="fiddle leaf fig">琴叶榕</button>
+        <button class="keyword-btn" data-category="plants" data-en="snake plant">虎尾兰</button>
+        <button class="keyword-btn" data-category="plants" data-en="string of pearls">珍珠吊兰</button>
+        <button class="keyword-btn" data-category="plants" data-en="air plants">空气凤梨</button>
+        <button class="keyword-btn" data-category="plants" data-en="chinese evergreen">万年青</button>
+        <button class="keyword-btn" data-category="plants" data-en="peace lily">白鹤芋</button>
+        <button class="keyword-btn" data-category="plants" data-en="zz plant">金钱树</button>
+        <button class="keyword-btn" data-category="plants" data-en="philodendron">蔓绿绒</button>
+        <button class="keyword-btn" data-category="plants" data-en="pothos">黄金葛</button>
+        <button class="keyword-btn" data-category="plants" data-en="spider plant">吊兰</button>
+        <button class="keyword-btn" data-category="plants" data-en="rubber plant">橡皮树</button>
+        <button class="keyword-btn" data-category="plants" data-en="palm tree">棕榈树</button>
+        <button class="keyword-btn" data-category="plants" data-en="bamboo">竹子</button>
+        <button class="keyword-btn" data-category="plants" data-en="fern">蕨类植物</button>
+        <button class="keyword-btn" data-category="plants" data-en="succulent garden">多肉植物园</button>
+        <button class="keyword-btn" data-category="plants" data-en="herb planter">香草植物盆</button>
+        <button class="keyword-btn" data-category="plants" data-en="bonsai">盆景</button>
+        <button class="keyword-btn" data-category="plants" data-en="orchid">花</button>
+        <button class="keyword-btn" data-category="plants" data-en="lavender">薰衣草</button>
+        <button class="keyword-btn" data-category="plants" data-en="aloe vera">芦荟</button>
+        <button class="keyword-btn" data-category="plants" data-en="staghorn fern">鹿角蕨</button>
+        <button class="keyword-btn" data-category="plants" data-en="string of hearts">心叶球兰</button>
+        <button class="keyword-btn" data-category="plants" data-en="jade plant">翡翠木</button>
+        <button class="keyword-btn" data-category="plants" data-en="banana tree">芭蕉树</button>
+        <button class="keyword-btn" data-category="plants" data-en="citrus tree">柑橘树</button>
+        <button class="keyword-btn" data-category="plants" data-en="vertical garden">垂直花园</button>
+        <button class="keyword-btn" data-category="plants" data-en="moss wall">苔藓墙</button>
+        <button class="keyword-btn" data-category="plants" data-en="preserved plants">永生植物</button>
+        <button class="keyword-btn" data-category="plants" data-en="wheat grass">麦草装饰</button>
+        <button class="keyword-btn" data-category="plants" data-en="reed grass">芦苇草</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">拍摄视角 / Camera Angle</div>
+        <button class="keyword-btn" data-category="angle" data-en="45-degree view">45度视角</button>
+        <button class="keyword-btn" data-category="angle" data-en="front view">正面视角</button>
+        <button class="keyword-btn" data-category="angle" data-en="bird's eye view">俯视视角</button>
+        <button class="keyword-btn" data-category="angle" data-en="wide angle">广角拍摄</button>
+        <button class="keyword-btn" data-category="angle" data-en="corner view">转角视角</button>
+        <button class="keyword-btn" data-category="angle" data-en="low angle shot">低角度拍摄</button>
+        <button class="keyword-btn" data-category="angle" data-en="through doorway">门框取景</button>
+        <button class="keyword-btn" data-category="angle" data-en="reflection shot">倒影拍摄</button>
+        <button class="keyword-btn" data-category="angle" data-en="symmetrical view">对称构图</button>
+        <button class="keyword-btn" data-category="angle" data-en="layered perspective">层次视角</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">氛围情绪 / Mood</div>
+        <button class="keyword-btn" data-category="mood" data-en="cozy and intimate">温馨私密</button>
+        <button class="keyword-btn" data-category="mood" data-en="peaceful and serene">宁静祥和</button>
+        <button class="keyword-btn" data-category="mood" data-en="luxurious and elegant">奢华优雅</button>
+        <button class="keyword-btn" data-category="mood" data-en="romantic and dreamy">浪漫梦幻</button>
+        <button class="keyword-btn" data-category="mood" data-en="modern and stylish">时尚现代</button>
+        <button class="keyword-btn" data-category="mood" data-en="zen and minimal">禅意简约</button>
+        <button class="keyword-btn" data-category="mood" data-en="tropical resort">度假风情</button>
+        <button class="keyword-btn" data-category="mood" data-en="artistic bohemian">艺术波西米亚</button>
+        <button class="keyword-btn" data-category="mood" data-en="rustic comfort">乡村舒适</button>
+        <button class="keyword-btn" data-category="mood" data-en="urban sanctuary">都市庇护所</button>
+        <button class="keyword-btn" data-category="mood" data-en="tranquil and meditative">静谧冥想</button>
+        <button class="keyword-btn" data-category="mood" data-en="bright and airy">明亮通透</button>
+        <button class="keyword-btn" data-category="mood" data-en="warm and inviting">温暖宜人</button>
+        <button class="keyword-btn" data-category="mood" data-en="sophisticated and refined">精优雅</button>
+        <button class="keyword-btn" data-category="mood" data-en="organic and natural">自然有机</button>
+        <button class="keyword-btn" data-category="mood" data-en="dramatic and bold">戏剧张力</button>
+        <button class="keyword-btn" data-category="mood" data-en="playful and creative">趣味创意</button>
+        <button class="keyword-btn" data-category="mood" data-en="ethereal and dreamy">空灵梦幻</button>
+        <button class="keyword-btn" data-category="mood" data-en="minimalist and calm">极简平静</button>
+        <button class="keyword-btn" data-category="mood" data-en="eclectic and vibrant">混搭活力</button>
+        <button class="keyword-btn" data-category="mood" data-en="mysterious and moody">神秘氛围</button>
+        <button class="keyword-btn" data-category="mood" data-en="harmonious and balanced">和谐平衡</button>
+        <button class="keyword-btn" data-category="mood" data-en="nostalgic and timeless">怀旧永恒</button>
+        <button class="keyword-btn" data-category="mood" data-en="exotic and adventurous">异域探险</button>
+        <button class="keyword-btn" data-category="mood" data-en="intimate and personal">私密个性</button>
+        <button class="keyword-btn" data-category="mood" data-en="refreshing and energetic">清新活力</button>
+        <button class="keyword-btn" data-category="mood" data-en="contemplative and quiet">沉思静谧</button>
+        <button class="keyword-btn" data-category="mood" data-en="artistic and expressive">艺术表现</button>
+        <button class="keyword-btn" data-category="mood" data-en="luxurious and opulent">奢华富丽</button>
+        <button class="keyword-btn" data-category="mood" data-en="casual and relaxed">随性休闲</button>
+        <button class="keyword-btn" data-category="mood" data-en="authentic and raw">原真本色</button>
+        <button class="keyword-btn" data-category="mood" data-en="whimsical and enchanting">奇思妙想</button>
+        <button class="keyword-btn" data-category="mood" data-en="sophisticated chic">精致时尚</button>
+        <button class="keyword-btn" data-category="mood" data-en="resort lifestyle">度假生活</button>
+        <button class="keyword-btn" data-category="mood" data-en="wellness retreat">康养静居</button>
+        <button class="keyword-btn" data-category="mood" data-en="cheerful and energetic">欢快活力</button>
+        <button class="keyword-btn" data-category="mood" data-en="playful and uplifting">趣味愉悦</button>
+        <button class="keyword-btn" data-category="mood" data-en="youthful vibrancy">青春活力</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">时间氛围 / Time Atmosphere</div>
+        <button class="keyword-btn" data-category="time" data-en="sunrise moment">日出时分</button>
+        <button class="keyword-btn" data-category="time" data-en="morning mist">晨雾弥漫</button>
+        <button class="keyword-btn" data-category="time" data-en="morning dew">晨露时分</button>
+        <button class="keyword-btn" data-category="time" data-en="midday sun">正午阳光</button>
+        <button class="keyword-btn" data-category="time" data-en="afternoon tea">下午茶时光</button>
+        <button class="keyword-btn" data-category="time" data-en="sunset glow">日落余晖</button>
+        <button class="keyword-btn" data-category="time" data-en="dusk atmosphere">黄昏氛围</button>
+        <button class="keyword-btn" data-category="time" data-en="twilight hour">暮色时分</button>
+        <button class="keyword-btn" data-category="time" data-en="starry night">星空夜晚</button>
+        <button class="keyword-btn" data-category="time" data-en="midnight calm">午夜静谧</button>
+        <button class="keyword-btn" data-category="time" data-en="rainy day">雨天氛围</button>
+        <button class="keyword-btn" data-category="time" data-en="foggy morning">雾气朦胧</button>
+        <button class="keyword-btn" data-category="time" data-en="cloudy afternoon">阴云午后</button>
+        <button class="keyword-btn" data-category="time" data-en="storm approaching">暴雨将至</button>
+        <button class="keyword-btn" data-category="time" data-en="after rain">雨后时光</button>
+        <button class="keyword-btn" data-category="time" data-en="rainbow moment">彩虹时刻</button>
+        <button class="keyword-btn" data-category="time" data-en="spring morning">春日清晨</button>
+        <button class="keyword-btn" data-category="time" data-en="summer noon">盛夏正午</button>
+        <button class="keyword-btn" data-category="time" data-en="autumn dusk">秋日黄昏</button>
+        <button class="keyword-btn" data-category="time" data-en="winter evening">冬日傍晚</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">渲染质感 / Rendering Quality</div>
+        <button class="keyword-btn" data-category="quality" data-en="photorealistic rendering">超写实渲染</button>
+        <button class="keyword-btn" data-category="quality" data-en="cinematic lighting">电影级光影</button>
+        <button class="keyword-btn" data-category="quality" data-en="studio lighting">专业棚拍</button>
+        <button class="keyword-btn" data-category="quality" data-en="natural lighting">自然光效</button>
+        <button class="keyword-btn" data-category="quality" data-en="dramatic lighting">戏剧光效</button>
+        <button class="keyword-btn" data-category="quality" data-en="moody lighting">氛围光效</button>
+        <button class="keyword-btn" data-category="quality" data-en="soft lighting">柔和打光</button>
+        <button class="keyword-btn" data-category="quality" data-en="high contrast">高对比度</button>
+        <button class="keyword-btn" data-category="quality" data-en="low contrast">低对比度</button>
+        <button class="keyword-btn" data-category="quality" data-en="color grading">色彩分级</button>
+        <button class="keyword-btn" data-category="quality" data-en="warm tone">暖色调</button>
+        <button class="keyword-btn" data-category="quality" data-en="cool tone">冷色调</button>
+        <button class="keyword-btn" data-category="quality" data-en="neutral tone">中性色调</button>
+        <button class="keyword-btn" data-category="quality" data-en="matte finish">哑光质感</button>
+        <button class="keyword-btn" data-category="quality" data-en="glossy finish">光泽质感</button>
+        <button class="keyword-btn" data-category="quality" data-en="film grain">胶片颗粒</button>
+        <button class="keyword-btn" data-category="quality" data-en="smooth texture">细腻质地</button>
+        <button class="keyword-btn" data-category="quality" data-en="sharp details">锐利细节</button>
+        <button class="keyword-btn" data-category="quality" data-en="soft focus">柔焦效果</button>
+        <button class="keyword-btn" data-category="quality" data-en="bokeh effect">背景虚化</button>
+        <button class="keyword-btn" data-category="quality" data-en="lens flare">镜头光晕</button>
+        <button class="keyword-btn" data-category="quality" data-en="global illumination">全局照明</button>
+        <button class="keyword-btn" data-category="quality" data-en="ambient occlusion">环境光遮蔽</button>
+        <button class="keyword-btn" data-category="quality" data-en="subsurface scattering">次表面散射</button>
+        <button class="keyword-btn" data-category="quality" data-en="caustics">焦散效果</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">家具风格 / Furniture Style</div>
+        <button class="keyword-btn" data-category="furniture" data-en="custom built-in">定制嵌入式</button>
+        <button class="keyword-btn" data-category="furniture" data-en="minimalist furniture">极简家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="organic shapes">有机形态</button>
+        <button class="keyword-btn" data-category="furniture" data-en="statement pieces">标志性单品</button>
+        <button class="keyword-btn" data-category="furniture" data-en="floating bed">悬浮床</button>
+        <button class="keyword-btn" data-category="furniture" data-en="sculptural sofa">雕塑感沙发</button>
+        <button class="keyword-btn" data-category="furniture" data-en="handcrafted wooden">手工木制家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="rattan furniture">藤编家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="built-in seating">嵌入式座椅</button>
+        <button class="keyword-btn" data-category="furniture" data-en="designer furniture">设计师家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="modular furniture">模块化家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="multifunctional">多功能家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="vintage pieces">复古单品</button>
+        <button class="keyword-btn" data-category="furniture" data-en="mid-century modern">中世纪现代</button>
+        <button class="keyword-btn" data-category="furniture" data-en="scandinavian design">北欧设计</button>
+        <button class="keyword-btn" data-category="furniture" data-en="italian luxury">意大利奢华</button>
+        <button class="keyword-btn" data-category="furniture" data-en="japanese minimalist">日式极简</button>
+        <button class="keyword-btn" data-category="furniture" data-en="artisan crafted">匠人手作</button>
+        <button class="keyword-btn" data-category="furniture" data-en="industrial style">工业风格</button>
+        <button class="keyword-btn" data-category="furniture" data-en="contemporary classic">当代经典</button>
+        <button class="keyword-btn" data-category="furniture" data-en="bohemian eclectic">波西米亚混搭</button>
+        <button class="keyword-btn" data-category="furniture" data-en="curved lines">曲线造型</button>
+        <button class="keyword-btn" data-category="furniture" data-en="geometric forms">几何形态</button>
+        <button class="keyword-btn" data-category="furniture" data-en="floating design">悬浮设计</button>
+        <button class="keyword-btn" data-category="furniture" data-en="integrated storage">一体化收纳</button>
+        <button class="keyword-btn" data-category="furniture" data-en="transformable">变形家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="space saving">节省空间</button>
+        <button class="keyword-btn" data-category="furniture" data-en="sustainable design">可持续设计</button>
+        <button class="keyword-btn" data-category="furniture" data-en="reclaimed materials">回收材料</button>
+        <button class="keyword-btn" data-category="furniture" data-en="bespoke pieces">定制单品</button>
+        <button class="keyword-btn" data-category="furniture" data-en="sculptural forms">雕塑形态</button>
+        <button class="keyword-btn" data-category="furniture" data-en="mixed materials">混合材质</button>
+        <button class="keyword-btn" data-category="furniture" data-en="natural textures">自然质感</button>
+        <button class="keyword-btn" data-category="furniture" data-en="luxury upholstery">奢华软包</button>
+        <button class="keyword-btn" data-category="furniture" data-en="candy colored velvet sofa">糖果色丝绒沙发</button>
+        <button class="keyword-btn" data-category="furniture" data-en="playful geometric furniture">趣味几何家具</button>
+        <button class="keyword-btn" data-category="furniture" data-en="colorful modular seating">彩色模块化座椅</button>
+        <button class="keyword-btn" data-category="furniture" data-en="bubble shaped furniture">泡泡形态家具</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">细节装饰 / Decorative Details</div>
+        <button class="keyword-btn" data-category="details" data-en="pendant lights">吊灯装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="wall art">墙面艺术</button>
+        <button class="keyword-btn" data-category="details" data-en="textile layers">织物层次</button>
+        <button class="keyword-btn" data-category="details" data-en="sculptural elements">雕塑元素</button>
+        <button class="keyword-btn" data-category="details" data-en="handwoven textiles">手工编织物</button>
+        <button class="keyword-btn" data-category="details" data-en="ceramic artifacts">陶艺摆件</button>
+        <button class="keyword-btn" data-category="details" data-en="natural crystals">天然水晶</button>
+        <button class="keyword-btn" data-category="details" data-en="vintage mirrors">复古镜子</button>
+        <button class="keyword-btn" data-category="details" data-en="brass accents">黄铜装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="woven baskets">编织篮筐</button>
+        <button class="keyword-btn" data-category="details" data-en="art installations">艺术装置</button>
+        <button class="keyword-btn" data-category="details" data-en="floating shelves">悬浮架</button>
+        <button class="keyword-btn" data-category="details" data-en="decorative screens">装饰屏风</button>
+        <button class="keyword-btn" data-category="details" data-en="macrame hangings">编织挂饰</button>
+        <button class="keyword-btn" data-category="details" data-en="abstract paintings">抽象画作</button>
+        <button class="keyword-btn" data-category="details" data-en="designer vases">设计师花瓶</button>
+        <button class="keyword-btn" data-category="details" data-en="stone sculptures">石雕摆件</button>
+        <button class="keyword-btn" data-category="details" data-en="metal art pieces">金属艺术品</button>
+        <button class="keyword-btn" data-category="details" data-en="glass installations">玻璃装置</button>
+        <button class="keyword-btn" data-category="details" data-en="textile wall art">织物壁挂</button>
+        <button class="keyword-btn" data-category="details" data-en="decorative pillows">装饰抱枕</button>
+        <button class="keyword-btn" data-category="details" data-en="area rugs">地毯装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="wall sconces">壁灯装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="track lighting">轨道射灯</button>
+        <button class="keyword-btn" data-category="details" data-en="floor lamps">落地灯具</button>
+        <button class="keyword-btn" data-category="details" data-en="table lamps">台灯摆件</button>
+        <button class="keyword-btn" data-category="details" data-en="accent mirrors">装饰镜子</button>
+        <button class="keyword-btn" data-category="details" data-en="wall panels">墙面板饰</button>
+        <button class="keyword-btn" data-category="details" data-en="decorative objects">装饰摆件</button>
+        <button class="keyword-btn" data-category="details" data-en="books and magazines">书籍杂志</button>
+        <button class="keyword-btn" data-category="details" data-en="throw blankets">装饰毯子</button>
+        <button class="keyword-btn" data-category="details" data-en="candle holders">烛台摆件</button>
+        <button class="keyword-btn" data-category="details" data-en="incense burners">香薰器具</button>
+        <button class="keyword-btn" data-category="details" data-en="decorative bowls">装饰碗盆</button>
+        <button class="keyword-btn" data-category="details" data-en="dried flowers">干花装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="driftwood art">流木艺术</button>
+        <button class="keyword-btn" data-category="details" data-en="wind chimes">风铃装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="decorative ladders">装饰梯子</button>
+        <button class="keyword-btn" data-category="details" data-en="wall tapestries">挂毯装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="antique pieces">古董摆件</button>
+        <button class="keyword-btn" data-category="details" data-en="geometric art pieces">几何艺术品</button>
+        <button class="keyword-btn" data-category="details" data-en="colored glass decor">彩色玻璃装饰</button>
+        <button class="keyword-btn" data-category="details" data-en="playful patterns">趣味图案</button>
+        <button class="keyword-btn" data-category="details" data-en="color block cushions">色块抱枕</button>
+        <button class="keyword-btn" data-category="details" data-en="neon art">霓虹艺术品</button>
+        <button class="keyword-btn" data-category="details" data-en="candy colored ceramics">糖果色陶瓷</button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">空间定义 / Space Definition</div>
+        <button class="keyword-btn" data-category="definition" data-en="enclosed interior">封闭式室内</button>
+        <button class="keyword-btn" data-category="definition" data-en="indoor room">室内房间</button>
+        <button class="keyword-btn" data-category="definition" data-en="interior architecture">室内建筑</button>
+        <button class="keyword-btn" data-category="definition" data-en="contained space">围合空间</button>
+        <button class="keyword-btn" data-category="definition" data-en="internal volume">内部空间</button>
+        <button class="keyword-btn" data-category="definition" data-en="room interior">房间内部</button>
+    </div>
+
+    <div id="result">
+        <div class="language-toggle">
+            <label><input type="radio" name="language" value="cn" checked> 中文</label>
+            <label><input type="radio" name="language" value="en"> English</label>
+        </div>
+        <div class="result-text">生成的提示词将显示在这里...</div>
+    </div>
+    <button id="copy-btn">复制提示词</button>
+
+    <script>
+        const buttons = document.querySelectorAll('.keyword-btn');
+        const result = document.getElementById('result');
+        const copyBtn = document.getElementById('copy-btn');
+        const languageRadios = document.querySelectorAll('input[name="language"]');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        const randomInspirationBtn = document.getElementById('random-inspiration-btn');
+        
+        let selectedKeywords = {
+            space: [],
+            style: [],
+            area: [],
+            architecture: [],
+            texture: [],
+            lighting: [],
+            color: [],
+            plants: [],
+            angle: [],
+            mood: [],
+            time: [],
+            quality: [],
+            furniture: [],
+            details: [],
+            definition: []
+        };
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.toggle('active');
+                const category = button.dataset.category;
+                const keyword = {
+                    cn: button.textContent,
+                    en: button.dataset.en
+                };
+
+                if (button.classList.contains('active')) {
+                    selectedKeywords[category].push(keyword);
+                } else {
+                    selectedKeywords[category] = selectedKeywords[category]
+                        .filter(k => k.cn !== keyword.cn);
+                }
+
+                updateResult();
+            });
+        });
+
+        languageRadios.forEach(radio => {
+            radio.addEventListener('change', updateResult);
+        });
+
+        // 扩展风格元素映射表
+        const styleElementsMap = {
+            'modern simplicity': {
+                elements: ['简洁立面', '几何造型', '开放空间', '清晰线条'],
+                materials: ['哑光材质', '磨砂玻璃', '自然石材', '金属饰面'],
+                colors: ['纯净白', '暖灰色', '木本色', '金属色'],
+                lighting: ['线性照明', '筒灯打光', '隐藏光源', '自然采光'],
+                details: ['极简装饰', '功能性收纳', '抽象��术', '简约家具']
+            },
+            'dopamine design': {
+                elements: ['圆润造型', '有机曲线', '趣味空间', '错落层次'],
+                materials: ['丝绒面料', '亮面烤漆', '彩色玻璃', '软包材质'],
+                colors: ['糖果粉', '薄荷绿', '柠檬黄', '天空蓝'],
+                lighting: ['柔和氛围光', '彩色光带', '趣味灯具', '渐变照明'],
+                details: ['趣味装饰', '色彩家具', '艺术摆件', '几何图案']
+            },
+            'cave dwelling': {
+                elements: ['有机曲面', '流线空间', '层次立面', '自然肌理'],
+                materials: ['清水混凝土', '天然石材', '木质板材', '金属网格'],
+                colors: ['岩石灰', '原木色', '土褐色', '青铜色'],
+                lighting: ['间接照明', '轮廓光带', '点光源', '光影变化'],
+                details: ['嵌入式家具', '曲线装饰', '自然纹理', '金属点缀']
+            },
+            'future modern': {
+                elements: ['动态曲面', '悬浮构件', '科技感', '几何切割'],
+                materials: ['反光金属', '通透玻璃', '发光材料', '合成板材'],
+                colors: ['太空灰', '电光白', '霓虹色', '钛金属色'],
+                lighting: ['智能照明', '光带设计', '互动灯光', '渐变效果'],
+                details: ['智能设备', '光电元素', '动态装置', '科技感家具']
+            },
+            'nordic minimalism': {
+                elements: ['开放格局', '留白设计', '自然采光', '简约线条'],
+                materials: ['浅色木材', '白色墙面', '亚麻织物', '原石材质'],
+                colors: ['纯白色', '本色', '亚麻灰', '淡蓝色'],
+                lighting: ['大面窗户', '吊灯设计', '壁灯装饰', '环境光源'],
+                details: ['木质家具', '编织地毯', '绿植搭配', '简约装饰']
+            },
+            'japanese zen': {
+                elements: ['榻榻米设计', '推拉门', '木格栅', '低矮家具'],
+                materials: ['原木', '和纸', '竹制品', '藤编织物'],
+                colors: ['原木色', '米白色', '深褐色', '抹茶绿'],
+                lighting: ['格栅光影', '和纸灯具', '自然光线', '间接照明'],
+                details: ['茶具组合', '禅意摆件', '书法挂轴', '竹编饰品']
+            },
+            'industrial chic': {
+                elements: ['裸露结构', '开放管线', '高层高', '大窗户'],
+                materials: ['水泥面', '蚀金属', '实木板材', '磨砂玻璃'],
+                colors: ['水泥灰', '铁锈红', '墨黑色', '原木色'],
+                lighting: ['工业吊灯', '轨道射灯', '金属壁灯', '悬吊灯具'],
+                details: ['金属架构', '皮革家具', '复古装饰', '机械元素']
+            },
+            'light luxury': {
+                elements: ['优雅线条', '轻奢细节', '通透空间', '对称布局'],
+                materials: ['大理石', '丝绒面料', '金属饰面', '艺术玻璃'],
+                colors: ['香槟金', '珍珠白', '浅灰色', '玫瑰金'],
+                lighting: ['水晶灯具', '间接光源', '艺术射灯', '装饰壁灯'],
+                details: ['金属装饰', '艺术画作', '轻奢摆件', '镜面元素']
+            },
+            'modern oriental': {
+                elements: ['东方格栅', '简化纹样', '留白空间', '虚实结合'],
+                materials: ['深色木材', '丝绸面料', '青石材质', '漆面工艺'],
+                colors: ['墨色', '赭石色', '青瓷色', '米白色'],
+                lighting: ['纱质灯具', '屏风透光', '艺术吊灯', '轮廓照明'],
+                details: ['东方器物', '水墨画作', '陶瓷摆件', '铜制饰品']
+            }
+        };
+
+        // 扩展功能区域映射的可选配置
+        const areaFeaturesMap = {
+            // 休息区域
+            'master bedroom': {
+                core: ['大床', '床头柜'],
+                optional: [
+                    // 梳妆区
+                    ['梳妆台', '化妆镜', '梳妆凳'],
+                    // 休闲区
+                    ['休闲椅', '落地灯', '边几'],
+                    // 衣帽区
+                    ['步入式衣帽间', '全身镜', '岛台'],
+                    // 阅读区
+                    ['阅读角', '书架', '躺椅'],
+                    // 工作区
+                    ['小型办公区', '书桌', '工作椅']
+                ],
+                lighting: ['主灯', '床头灯', '氛围灯', '化妆灯', '衣帽间灯'],
+                storage: ['衣柜', '床头柜', '抽屉柜', '展示柜', '鞋柜']
+            },
+
+            'leisure lounge': {
+                core: ['懒人沙发', '休闲椅'],
+                optional: [
+                    // 娱乐区
+                    ['投影幕布', '音响系统', '游戏机'],
+                    // 茶饮区
+                    ['茶几', '饮品柜', '冰箱'],
+                    // 阅读区
+                    ['书架', '落地灯', '摇椅'],
+                    // 社交区
+                    ['休闲桌', '吧台', '高脚凳'],
+                    // 冥想区
+                    ['瑜伽垫', '香薰机', '坐垫']
+                ],
+                lighting: ['主灯', '落地灯', '壁灯', '氛围灯', '装饰灯'],
+                storage: ['展示柜', '储物柜', '多媒体柜', '杂志架', '隐藏收纳']
+            },
+
+            'living room': {
+                core: ['沙发组合', '茶几', '电视柜'],
+                optional: [
+                    // 会客区
+                    ['单人沙发', '边几', '装饰画'],
+                    // 展示区
+                    ['展示柜', '艺术品', '装饰灯'],
+                    // 娱乐区
+                    ['影音系统', '游戏机', '音响'],
+                    // 休闲区
+                    ['躺椅', '摇椅', '落地灯'],
+                    // 餐饮区
+                    ['吧台', '高脚凳', '酒柜']
+                ],
+                lighting: ['主灯', '射灯', '壁灯', '落地灯', '装饰灯'],
+                storage: ['电视柜', '展示柜', '储物柜', '隐藏收纳', '多功能柜']
+            },
+
+            'workspace': {
+                core: ['书桌', '工作椅', '台灯'],
+                optional: [
+                    // 会议区
+                    ['小型会议桌', '会议椅', '白板'],
+                    // 资料区
+                    ['文件柜', '打印机柜', '资料架'],
+                    // 休息区
+                    ['休闲沙发', '茶几', '绿植'],
+                    // 展示区
+                    ['展示墙', '作品架', '灯带'],
+                    // 储物区
+                    ['工具柜', '样品柜', '材料架']
+                ],
+                lighting: ['主灯', '工作灯', '射灯', '��饰灯', '环境光'],
+                storage: ['文件柜', '工具柜', '样品柜', '书架', '抽屉柜']
+            },
+
+            'open kitchen': {
+                core: ['橱柜', '操作台', '电器区'],
+                optional: [
+                    // 烹饪区
+                    ['灶台', '抽油烟机', '调理台'],
+                    // ����区
+                    ['水槽', '沥水架', '垃圾分类'],
+                    // 储藏区
+                    ['冰箱', '储物柜', '调料架'],
+                    // 用餐区
+                    ['中岛台', '吧台椅', '餐具柜'],
+                    // 烘焙区
+                    ['烤箱', '面包机', '搅拌机']
+                ],
+                lighting: ['主灯', '柜下灯', '射灯', '吊灯', '氛围灯'],
+                storage: ['橱柜', '调料架', '餐具柜', '电器柜', '酒柜']
+            },
+
+            // 客厅区域
+            'modern living room': {
+                core: ['现代沙发组合', '大理石茶��', '电视背景墙'],
+                optional: [
+                    ['休闲躺椅', '落地灯', '边几'],
+                    ['装饰画', '壁灯', '置物架'],
+                    ['地毯', '抱枕', '绿植'],
+                    ['电视柜', '音响系统', '装饰柜'],
+                    ['窗帘', '百叶窗', '遮光帘']
+                ],
+                lighting: ['主灯', '射灯', '壁灯', '落地灯', '氛围灯'],
+                storage: ['电视柜', '展示柜', '边柜', '隐藏收纳', '装饰架']
+            },
+
+            // 餐厅区域
+            'dining area': {
+                core: ['餐桌组合', '餐椅', '餐边柜'],
+                optional: [
+                    ['酒柜', '红酒架', '酒具'],
+                    ['装饰画', '壁灯', '镜面墙'],
+                    ['餐具收纳', '餐具展示', '调味料架'],
+                    ['吊灯', '射灯', '氛围灯'],
+                    ['绿植', '装饰品', '餐桌摆件']
+                ],
+                lighting: ['餐厅吊灯', '射灯', '壁灯', '装饰灯', '氛围灯'],
+                storage: ['餐边柜', '展示柜', '酒柜', '餐具柜', '调味料架']
+            },
+
+            // 主卧室
+            'master bedroom suite': {
+                core: ['双人床', '床头柜', '床品套装'],
+                optional: [
+                    ['梳妆台', '化妆镜', '梳妆凳'],
+                    ['衣柜', '穿衣镜', '收纳箱'],
+                    ['休闲椅', '落地灯', '边几'],
+                    ['窗帘', '地毯', '装饰画'],
+                    ['书桌', '书架', '阅读灯']
+                ],
+                lighting: ['主灯', '床头灯', '梳妆灯', '衣柜灯', '氛围灯'],
+                storage: ['衣柜', '床头柜', '抽屉柜', '收纳箱', '鞋柜']
+            },
+
+            // 书房/工作区
+            'home office': {
+                core: ['书桌', '人体工学椅', '书架'],
+                optional: [
+                    ['电脑显示器', '键盘托架', '文件架'],
+                    ['打印机柜', '文件柜', '收纳盒'],
+                    ['休闲沙发', '茶几', '边几'],
+                    ['绿植', '装饰画', '挂钟'],
+                    ['窗帘', '百叶窗', '遮光帘']
+                ],
+                lighting: ['台灯', '落地灯', '射灯', '吸顶灯', '壁灯'],
+                storage: ['书架', '文件柜', '抽屉柜', '收纳盒', '置物架']
+            },
+
+            // 开放式厨房
+            'open kitchen': {
+                core: ['橱柜', '中岛台', '厨房电器'],
+                optional: [
+                    ['水槽', '水龙头', '沥水架'],
+                    ['灶台', '抽油烟机', '微波炉'],
+                    ['冰箱', '烤箱', '洗碗机'],
+                    ['储物架', '调味料架', '刀具架'],
+                    ['吧台', '吧椅', '酒柜']
+                ],
+                lighting: ['吸顶灯', '射灯', '柜底灯', '吊灯', '氛围灯'],
+                storage: ['橱柜', '储物柜', '调味料架', '餐具柜', '冰箱']
+            },
+
+            // 卫生间
+            'master bathroom': {
+                core: ['浴缸/淋浴房', '马桶', '洗手台'],
+                optional: [
+                    ['浴室柜', '镜柜', '毛巾架'],
+                    ['置物架', '收纳柜', '洗漱用品架'],
+                    ['浴室凳', '浴巾架', '浴室垫'],
+                    ['干湿分离', '玻璃隔断', '排气扇'],
+                    ['暖风机', '浴霸', '换气扇']
+                ],
+                lighting: ['主灯', '镜前灯', '射灯', '氛围灯', '浴霸灯'],
+                storage: ['浴室柜', '镜柜', '置物架', '毛巾架', '收纳柜']
+            },
+
+            // 衣帽间
+            'walk-in closet': {
+                core: ['衣柜系统', '中岛柜', '全身镜'],
+                optional: [
+                    ['鞋柜', '包包收纳', '首饰收纳'],
+                    ['穿衣镜', '试衣区', '换衣凳'],
+                    ['展示柜', '置物架', '抽屉柜'],
+                    ['化妆区', '梳妆台', '化妆镜'],
+                    ['季节性收纳', '行李箱收纳', '配饰收纳']
+                ],
+                lighting: ['主灯', '射灯', '柜内灯', '镜前灯', '氛围灯'],
+                storage: ['衣柜', '鞋柜', '包包柜', '首饰柜', '配饰收纳']
+            },
+
+            // 创意工作室
+            'creative studio': {
+                core: ['工作台', '创作区', '展示墙'],
+                optional: [
+                    ['画架', '工具柜', '材料架'],
+                    ['电脑工作站', '绘图板', '显示器'],
+                    ['模型展示区', '样品陈列', '作品墙'],
+                    ['休息区', '沙发', '茶几'],
+                    ['会客区', '洽谈桌', '演示屏']
+                ],
+                lighting: ['自然采光', '轨道射灯', '可调工作灯', '展示灯', '氛围灯'],
+                storage: ['工具柜', '材料柜', '作品储藏', '样品架', '文件柜']
+            },
+
+            // 会议空间
+            'meeting space': {
+                core: ['会议桌', '会议椅', '显示屏'],
+                optional: [
+                    ['投影设备', '音响系统', '白板'],
+                    ['茶水间', '休息区', '沙发组'],
+                    ['收纳柜', '资料架', '展示柜'],
+                    ['视频会议设备', '控制台', '音响'],
+                    ['绿植墙', '装饰画', 'logo墙']
+                ],
+                lighting: ['主灯', '射灯', '壁灯', '装饰灯', '可调光源'],
+                storage: ['文件柜', '设备柜', '茶水柜', '展示架', '杂物柜']
+            },
+
+            // 主卫生间
+            'master bathroom': {
+                core: ['浴缸', '淋浴房', '双人洗手台'],
+                optional: [
+                    ['化妆区', '梳妆台', '美容镜'],
+                    ['马桶间', '智能马桶', '妇洗器'],
+                    ['干湿分离', '玻璃隔断', '地漏'],
+                    ['暖气设备', '毛巾架', '浴袍钩'],
+                    ['香薰系统', '蓝牙音响', '防雾镜']
+                ],
+                lighting: ['主灯', '镜前灯', '氛围灯', '防水射灯', '装饰灯'],
+                storage: ['浴室柜', '毛巾柜', '收纳架', '置物架', '药品柜']
+            },
+
+            // 水疗浴室
+            'spa bathroom': {
+                core: ['按摩浴缸', '蒸汽房', '休息区'],
+                optional: [
+                    ['冷热池', '按摩喷头', '瀑布花洒'],
+                    ['香薰系统', '音乐系统', '色光疗愈'],
+                    ['休息躺椅', '毛巾架', '饮品台'],
+                    ['更衣区', '储物柜', '浴袍挂钩'],
+                    ['植物装饰', '艺术品', '装饰灯']
+                ],
+                lighting: ['情境灯光', '水下灯', '星空顶', '壁灯', '氛围灯'],
+                storage: ['毛巾柜', '护理品柜', '浴袍柜', '个人物品柜', '清洁用品柜']
+            },
+
+            // 步入式衣帽间
+            'walk-in closet': {
+                core: ['衣柜系统', '中岛柜', '全身镜'],
+                optional: [
+                    ['包包展示', '首饰收纳', '鞋柜'],
+                    ['化妆区', '梳妆台', '美容镜'],
+                    ['试衣区', '旋转镜', '坐凳'],
+                    ['季节性收纳', '行李箱储存', '保险箱'],
+                    ['香氛系统', '除湿设备', '照明展示']
+                ],
+                lighting: ['主灯', '射灯', '柜内灯', '镜前灯', '展示灯'],
+                storage: ['悬挂区', '抽屉柜', '展示柜', '配饰柜', '鞋履收纳']
+            },
+
+            // 家庭影院
+            'home theater': {
+                core: ['影院沙发', '投影设备', '音响系统'],
+                optional: [
+                    ['环绕音响', '音响处理器', '功放'],
+                    ['零食吧台', '饮品柜', '冰箱'],
+                    ['游戏设备', '控制台', '收纳柜'],
+                    ['隔音处理', '窗帘系统', '声学面板'],
+                    ['气氛灯带', '情境控制', '通风系统']
+                ],
+                lighting: ['可调光源', '氛围灯带', '地脚灯', '墙面灯', '指示灯'],
+                storage: ['设备柜', '碟片收纳', '零食柜', '毯子收纳', '遥控器收纳']
+            },
+
+            // 游戏室
+            'game room': {
+                core: ['游戏区域', '休闲沙发', '娱乐设备'],
+                optional: [
+                    ['游戏机', '大屏显示器', '音响'],
+                    ['桌游区', '棋牌桌', '休闲椅'],
+                    ['零食吧台', '饮品柜', '小冰箱'],
+                    ['收纳系统', '展示柜', '装饰墙'],
+                    ['休息区', '按摩椅', '躺椅']
+                ],
+                lighting: ['主灯', '射灯', '氛围灯', '装饰灯', '可调光源'],
+                storage: ['游戏收纳', '设备柜', '展示架', '杂物柜', '饮品柜']
+            },
+
+            // 音乐角
+            'music corner': {
+                core: ['乐器区', '音响设备', '练习区'],
+                optional: [
+                    ['钢琴区', '琴凳', '谱架'],
+                    ['录音设备', '混音台', '监听音箱'],
+                    ['乐器收纳', '展示架', '装饰画'],
+                    ['休息区', '沙发', '茶几'],
+                    ['隔音设施', '吸音板', '反射板']
+                ],
+                lighting: ['主灯', '钢琴灯', '氛围灯', '谱架灯', '装饰灯'],
+                storage: ['乐器柜', '谱架收纳', '设备柜', '���件收纳', '展示架']
+            },
+
+            // 阳光房
+            'sunroom': {
+                core: ['休闲沙发', '观景椅', '绿植区'],
+                optional: [
+                    ['茶几组合', '边几', '杂志架'],
+                    ['吊篮椅', '摇椅', '躺椅'],
+                    ['花架', '植物架', '绿植墙'],
+                    ['遮阳系统', '通风设备', '温控系统'],
+                    ['储物��', '工具架', '花艺台']
+                ],
+                lighting: ['自然采光', '射灯', '壁灯', '装饰灯', '植物生长灯'],
+                storage: ['园艺工具柜', '绿植用品柜', '杂物柜', '收纳箱', '展示架']
+            },
+
+            // 露台休闲区
+            'terrace lounge': {
+                core: ['户外沙发', '遮阳伞', '茶几'],
+                optional: [
+                    ['躺椅', '摇椅', '吊椅'],
+                    ['烧烤区', '户外厨房', '吧台'],
+                    ['绿植区', '花园箱', '垂直花园'],
+                    ['照明系统', '音响设备', '取暖器'],
+                    ['储物箱', '工具柜', '收纳柜']
+                ],
+                lighting: ['户外射灯', '地埋灯', '装饰灯串', '壁灯', '景观灯'],
+                storage: ['户外收纳箱', '工具柜', '靠垫收纳', '杂物柜', '园艺工具架']
+            },
+
+            // 健身房
+            'fitness room': {
+                core: ['有氧区', '力量区', '拉伸区'],
+                optional: [
+                    ['跑步机', '椭圆机', '动感单车'],
+                    ['哑铃架', '深蹲架', '举重台'],
+                    ['瑜伽区', '拉伸垫', '泡沫轴'],
+                    ['更衣区', '储物柜', '饮水机'],
+                    ['镜墙', '电视墙', '音响系统']
+                ],
+                lighting: ['主灯', '镜前灯', '氛围灯', '局部照明', '紧急照明'],
+                storage: ['器械收纳', '个人储物柜', '毛巾架', '清洁用品柜', '饮品柜']
+            },
+
+            // 瑜伽室
+            'yoga studio': {
+                core: ['瑜伽区', '冥想区', '更衣区'],
+                optional: [
+                    ['瑜伽垫收纳', '瑜伽器械', '冥想垫'],
+                    ['音响系统', '香薰机', '加湿器'],
+                    ['镜墙', '装饰画', '绿植'],
+                    ['储物架', '个人物品柜', '饮水区'],
+                    ['通风系统', '温控设备', '空气净化']
+                ],
+                lighting: ['自然光', '可调光源', '氛围灯', '壁灯', '冥想灯'],
+                storage: ['瑜伽垫架', '器械柜', '个人储物柜', '杂物柜', '清洁用品柜']
+            },
+
+            // 茶室
+            'tea room': {
+                core: ['茶台', '坐垫区', '水吧'],
+                optional: [
+                    ['茶具收纳', '茶叶储藏', '水具'],
+                    ['榻榻米', '矮桌', '靠垫'],
+                    ['装饰画', '花器', '香炉'],
+                    ['置物架', '展示柜', '书架'],
+                    ['通风系统', '加湿器', '空气净化']
+                ],
+                lighting: ['自然光', '茶台灯', '氛围灯', '壁灯', '装饰灯'],
+                storage: ['茶具柜', '茶叶柜', '水具架', '杂物柜', '展示架']
+            },
+
+            // 酒窖
+            'wine cellar': {
+                core: ['酒柜', '品酒区', '储存区'],
+                optional: [
+                    ['恒温系统', '湿度控制', '通风设备'],
+                    ['品酒台', '高脚凳', '杯架'],
+                    ['展示柜', '醒酒器架', '酒具柜'],
+                    ['照明系统', '标签展示', '温度显示'],
+                    ['保安系统', '监控设备', '锁具']
+                ],
+                lighting: ['间接照明', '展示灯', '氛围灯', '柜内灯', '标签灯'],
+                storage: ['酒瓶架', '酒具柜', '醒酒器架', '杯架', '配件收纳']
+            },
+
+            // 儿童游戏室
+            'kids playroom': {
+                core: ['活动区', '游戏区', '收纳区'],
+                optional: [
+                    ['玩具收纳', '图书角', '艺术区'],
+                    ['攀爬墙', '滑梯', '秋千'],
+                    ['学习桌', '小椅子', '收纳箱'],
+                    ['展示墙', '黑板墙', '软垫'],
+                    ['多媒体区', '音响', '投影']
+                ],
+                lighting: ['主灯', '阅读灯', '氛围灯', '夜灯', '投影灯'],
+                storage: ['玩具柜', '书架', '收纳箱', '展示架', '工具箱']
+            },
+
+            // 艺术工作室
+            'art studio': {
+                core: ['创作区', '展示区', '储物区'],
+                optional: [
+                    ['画架', '工作台', '材料柜'],
+                    ['清洗区', '晾干区', '工具架'],
+                    ['展示墙', '作品架', '灯光轨道'],
+                    ['休息区', '参考资料区', '模特台'],
+                    ['收纳系统', '材��分类', '成品区']
+                ],
+                lighting: ['自然光', '轨道射灯', '工作灯', '展示灯', '氛围灯'],
+                storage: ['材料柜', '工具架', '作品架', '参考资料架', '成品柜']
+            },
+
+            // 观影室
+            'screening room': {
+                core: ['观影沙发', '巨幕投影', '环绕音响'],
+                optional: [
+                    ['影音控制台', '功放系统', '音响处理器'],
+                    ['迷你吧台', '冰箱', '零食柜'],
+                    ['隔音墙面', '吸音板', '声学处理'],
+                    ['情境灯光', '智能控制', '通风系统'],
+                    ['影音收藏', '设备柜', '储物间']
+                ],
+                lighting: ['可调光源', '氛围灯带', '地面指示灯', '壁灯', '装饰灯'],
+                storage: ['影音设备柜', '收藏展示柜', '零食储物', '毯子收纳', '杂物柜']
+            },
+
+            // 棋牌室
+            'game parlor': {
+                core: ['棋牌桌', '休闲座椅', '茶水区'],
+                optional: [
+                    ['麻将桌', '自动麻将机', '骰子盅'],
+                    ['休息沙发', '按摩椅', '躺椅'],
+                    ['茶具组合', '饮品柜', '小冰箱'],
+                    ['展示柜', '收藏架', '装饰画'],
+                    ['通风系统', '空气净化', '加湿器']
+                ],
+                lighting: ['主灯', '桌面灯', '壁灯', '装饰灯', '氛围灯'],
+                storage: ['游戏收纳', '茶具柜', '杂物柜', '展示架', '储物箱']
+            },
+
+            // 书吧
+            'reading lounge': {
+                core: ['书架墙', '阅读区', '休息区'],
+                optional: [
+                    ['单人沙发', '阅读灯', '边几'],
+                    ['咖啡吧台', '饮品区', '点心柜'],
+                    ['讨论区', '小圆桌', '休闲椅'],
+                    ['杂志架', '报刊区', '新书展示'],
+                    ['多媒体区', '电子书区', '充电站']
+                ],
+                lighting: ['阅读灯', '书架灯', '吊灯', '壁灯', '氛围灯'],
+                storage: ['书架系统', '杂志架', '文具收纳', '多媒体储存', '展示柜']
+            },
+
+            // 宠物区
+            'pet area': {
+                core: ['活动区', '休息区', '清洁区'],
+                optional: [
+                    ['猫爬架', '猫窝', '猫砂区'],
+                    ['狗窝', '玩具区', '训练区'],
+                    ['储粮区', '饮水机', '食盆架'],
+                    ['清洁台', '洗澡区', '烘干区'],
+                    ['医疗箱', '美容工具', '户外用品']
+                ],
+                lighting: ['主灯', '局部照明', '夜灯', '取暖灯', '环境光'],
+                storage: ['用品收纳', '食品储存', '玩具收纳', '清洁用品', '医疗用品']
+            },
+
+            // 手工坊
+            'craft studio': {
+                core: ['工作台', '材料区', '展示区'],
+                optional: [
+                    ['缝纫机台', '裁剪台', '熨烫区'],
+                    ['工具墙', '材料架', '收纳柜'],
+                    ['成品展示', '样品陈列', '灯光轨道'],
+                    ['洗手池', '清洁区', '晾干区'],
+                    ['休息角', '参考资料区', '小型会客区']
+                ],
+                lighting: ['工作灯', '轨道射灯', '展示灯', '自然光', '氛围灯'],
+                storage: ['材料柜', '工具收纳', '成品展示', '样品储存', '杂物柜']
+            },
+
+            // 冥想室
+            'meditation room': {
+                core: ['打坐区', '休息区', '净化区'],
+                optional: [
+                    ['坐垫组合', '靠垫', '毯子'],
+                    ['香薰系统', '音响设备', '加湿器'],
+                    ['绿植墙', '水景', '艺术品'],
+                    ['茶饮区', '小桌几', '储物柜'],
+                    ['通风系统', '温控设备', '空气净化']
+                ],
+                lighting: ['自然光', '可调光源', '壁灯', '蜡烛台', '氛围灯'],
+                storage: ['坐垫收纳', '器具柜', '香薰储存', '茶具收纳', '杂物柜']
+            }
+        };
+
+        // 在updateResult函数中添加风格深化逻辑
+        function updateResult() {
+            const language = document.querySelector('input[name="language"]:checked').value;
+            let story = '';
+            
+            if (language === 'cn') {
+                // 1. 核心定义（明确是室内空间）
+                story += '这是一个位于室内的封闭空间，';
+                
+                // 2. 空间类型和主要功能（从大到小描述）
+                if (selectedKeywords.space.length > 0) {
+                    story += `作为一个${selectedKeywords.space.map(k => k.cn).join('与')}，`;
+                }
+                
+                // 3. 整体风格和氛围（设定基调）
+                if (selectedKeywords.style.length > 0 || selectedKeywords.mood.length > 0) {
+                    story += `空间融合了${selectedKeywords.style.map(k => k.cn).join('与')}的设计理念，`;
+                    story += `营造${selectedKeywords.mood.map(k => k.cn).join('与')}的氛围。`;
+                }
+                
+                // 4. 建筑结构特征（空间的骨架）
+                if (selectedKeywords.architecture.length > 0) {
+                    story += `主要通过${selectedKeywords.architecture.map(k => k.cn).join('、')}的建筑特征塑造空间。`;
+                }
+                
+                // 5. 功能分区（空间的布局）
+                if (selectedKeywords.area.length > 0) {
+                    story += '空间规划包含';
+                    selectedKeywords.area.forEach((area, index) => {
+                        const areaFeatures = areaFeaturesMap[area.en];
+                        if (areaFeatures) {
+                            // 随机选择1-2个可选配置组合
+                            const selectedOptionals = areaFeatures.optional
+                                .sort(() => Math.random() - 0.5)
+                                .slice(0, Math.floor(Math.random() * 2) + 1);
+                            
+                            if (index === 0) {
+                                story += `${area.cn}（配置${areaFeatures.core.join('、')}的核心功能，`;
+                                story += `可选配${selectedOptionals.map(opt => opt.join('、')).join('或')}等）`;
+                            } else {
+                                story += `、${area.cn}（配置${areaFeatures.core.join('、')}的核心功能，`;
+                                story += `可选配${selectedOptionals.map(opt => opt.join('、')).join('或')}等）`;
+                            }
+                        } else {
+                            if (index === 0) {
+                                story += area.cn;
+                            } else {
+                                story += `、${area.cn}`;
+                            }
+                        }
+                    });
+                    story += '等功能分区。';
+                }
+                
+                // 6. 材质与色彩（空间的皮肤）
+                if (selectedKeywords.texture.length > 0 || selectedKeywords.color.length > 0) {
+                    story += `主要使用${selectedKeywords.texture.map(k => k.cn).join('、')}等材质，`;
+                    story += `色彩以${selectedKeywords.color.map(k => k.cn).join('、')}为主。`;
+                }
+                
+                // 7. 光线设计（空间的灵魂）
+                if (selectedKeywords.lighting.length > 0) {
+                    story += `光线通过${selectedKeywords.lighting.map(k => k.cn).join('、')}的方式呈现。`;
+                }
+                
+                // 8. 软装陈设（空间的血肉）
+                if (selectedKeywords.furniture.length > 0 || selectedKeywords.details.length > 0) {
+                    story += `家具选用${selectedKeywords.furniture.map(k => k.cn).join('、')}，`;
+                    story += `搭配${selectedKeywords.details.map(k => k.cn).join('、')}的装饰细节。`;
+                }
+                
+                // 9. 植物配置（为空间注入生命力）
+                if (selectedKeywords.plants.length > 0) {
+                    story += `空间点缀${selectedKeywords.plants.map(k => k.cn).join('、')}等绿植。`;
+                }
+
+                // 10. 风格深化解析（具体风格元素的转化）
+                if (selectedKeywords.style.length > 0) {
+                    story += '\n\n风格元素转化：\n';
+                    selectedKeywords.style.forEach(style => {
+                        const styleMap = styleElementsMap[style.en];
+                        if (styleMap) {
+                            story += `- ${style.cn}：空间特征为${styleMap.elements.slice(0,2).join('、')}，`;
+                            story += `材质为${styleMap.materials.slice(0,2).join('、')}，`;
+                            story += `主色调为${styleMap.colors.slice(0,2).join('、')}，`;
+                            story += `照明采用${styleMap.lighting.slice(0,2).join('、')}。\n`;
+                        }
+                    });
+                }
+
+                // 在渲染要求之前添加空间定义的描述
+                if (selectedKeywords.definition.length > 0) {
+                    story += `\n\n空间定义：这是一个${selectedKeywords.definition.map(k => k.cn).join('、')}的设计空间。`;
+                }
+
+                // 拍摄视角
+                if (selectedKeywords.angle.length > 0) {
+                    story += `\n\n拍摄视角：建议从${selectedKeywords.angle.map(k => k.cn).join('、')}等角度进行拍摄，以更好地展现空间特征。`;
+                }
+
+                // 渲染要求
+                story += '\n\n渲染要求：8k超高清 - 专业室内摄影 - 超写实渲染 - 精细材质 - 完美细节 - 专业布光 - 环境光遮蔽 - 全局照明';
+            } else {
+                // English version
+                story += 'This is an enclosed interior space, ';
+                if (selectedKeywords.space.length > 0 || selectedKeywords.style.length > 0) {
+                    story += `Imagine a ${selectedKeywords.space.map(k => k.en).join(' and ')}, `;
+                    story += `perfectly blending ${selectedKeywords.style.map(k => k.en).join(' and ')} design elements. `;
+                }
+
+                if (selectedKeywords.mood.length > 0 || selectedKeywords.time.length > 0) {
+                    story += `During the ${selectedKeywords.time.map(k => k.en).join(' or ')}, `;
+                    story += `the space emanates a ${selectedKeywords.mood.map(k => k.en).join(' and ')} atmosphere. `;
+                }
+
+                if (selectedKeywords.architecture.length > 0 || selectedKeywords.area.length > 0) {
+                    story += `The space features ${selectedKeywords.architecture.map(k => k.en).join(' and ')} architectural elements, `;
+                    story += `with thoughtfully designed ${selectedKeywords.area.map(k => k.en).join(', ')}. `;
+                }
+
+                if (selectedKeywords.texture.length > 0 || selectedKeywords.color.length > 0) {
+                    story += `The design incorporates ${selectedKeywords.texture.map(k => k.en).join(', ')} materials, `;
+                    story += `complemented by ${selectedKeywords.color.map(k => k.en).join(' and ')} color palette. `;
+                }
+
+                if (selectedKeywords.lighting.length > 0) {
+                    story += `${selectedKeywords.lighting.map(k => k.en).join(' and ')} lighting effects add drama to the space. `;
+                }
+
+                if (selectedKeywords.furniture.length > 0 || selectedKeywords.details.length > 0) {
+                    story += `The space is furnished with ${selectedKeywords.furniture.map(k => k.en).join(', ')}, `;
+                    story += `adorned with ${selectedKeywords.details.map(k => k.en).join(', ')} details. `;
+                }
+
+                if (selectedKeywords.plants.length > 0) {
+                    story += `${selectedKeywords.plants.map(k => k.en).join(' and ')} bring life to the space. `;
+                }
+
+                if (selectedKeywords.angle.length > 0 || selectedKeywords.quality.length > 0) {
+                    story += `\n\nPhotography notes: Capture from ${selectedKeywords.angle.map(k => k.en).join(' or ')} angles, `;
+                    story += `rendered with ${selectedKeywords.quality.map(k => k.en).join(' and ')} quality.`;
+                }
+                
+                story += '\n\nRendering requirements: ';
+                story += '8k ultra HD - professional interior photography - photorealistic rendering - detailed materials - perfect details - professional lighting - ambient occlusion - global illumination';
+
+                // 在结尾处添加空间定义的英文描述
+                if (selectedKeywords.definition.length > 0) {
+                    story += `\n\nSpace Definition: This is a ${selectedKeywords.definition.map(k => k.en).join(', ')} design space.`;
+                }
+
+                // Camera Angles
+                if (selectedKeywords.angle.length > 0) {
+                    story += `\n\nCamera Angles: Capture the space from ${selectedKeywords.angle.map(k => k.en).join(', ')} to best showcase the spatial characteristics.`;
+                }
+
+                // Rendering requirements
+                story += '\n\nRendering Requirements: 8k Ultra HD - Professional Interior Photography - Photorealistic Rendering - Detailed Materials - Perfect Details - Professional Lighting - Ambient Occlusion - Global Illumination';
+            }
+
+            result.querySelector('.result-text').innerHTML = story || '请选择关键词...';
+        }
+
+        copyBtn.addEventListener('click', () => {
+            const textToCopy = result.querySelector('.result-text').textContent;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => alert('提示词已复制到剪贴板！'));
+        });
+
+        clearAllBtn.addEventListener('click', () => {
+            // 清除所有选中的按钮样式
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // 清空所有已选关键词
+            Object.keys(selectedKeywords).forEach(key => {
+                selectedKeywords[key] = [];
+            });
+            
+            // 更新显示结果
+            updateResult();
+        });
+
+        // 添加hover效果的样式
+        clearAllBtn.addEventListener('mouseover', () => {
+            clearAllBtn.style.backgroundColor = '#d32f2f';
+        });
+        
+        clearAllBtn.addEventListener('mouseout', () => {
+            clearAllBtn.style.backgroundColor = '#f44336';
+        });
+
+        // 修改随机选择功能的代码
+        document.getElementById('random-inspiration-btn').addEventListener('click', function() {
+            // 先清除所有已选择的
+            clearAllSelections();
+            
+            // 重置selectedKeywords对象
+            for (let category in selectedKeywords) {
+                selectedKeywords[category] = [];
+            }
+            
+            // 获取所有类别
+            const categories = {
+                'space': document.querySelectorAll('[data-category="space"]'),
+                'style': document.querySelectorAll('[data-category="style"]'),
+                'area': document.querySelectorAll('[data-category="area"]'),
+                'architecture': document.querySelectorAll('[data-category="architecture"]'),
+                'texture': document.querySelectorAll('[data-category="texture"]'),
+                'lighting': document.querySelectorAll('[data-category="lighting"]'),
+                'color': document.querySelectorAll('[data-category="color"]'),
+                'plants': document.querySelectorAll('[data-category="plants"]'),
+                'angle': document.querySelectorAll('[data-category="angle"]'),
+                'mood': document.querySelectorAll('[data-category="mood"]'),
+                'definition': document.querySelectorAll('[data-category="definition"]') // 添加这一行
+            };
+            
+            // 对每个类别进行随机选择
+            for (let category in categories) {
+                const buttons = Array.from(categories[category]);
+                const numToSelect = Math.floor(Math.random() * 2) + 2; // 随机选择2-3个
+                
+                // 随机打乱数组并选择前numToSelect个
+                const selectedButtons = buttons
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, numToSelect);
+                    
+                // 添加active类并更新selectedKeywords
+                selectedButtons.forEach(button => {
+                    button.classList.add('active');
+                    // 添加到selectedKeywords中
+                    selectedKeywords[category].push({
+                        cn: button.textContent,
+                        en: button.dataset.en
+                    });
+                });
+            }
+            
+            // 更新结果显示
+            updateResult();
+        });
+
+        // 修改清除函数，同时清除selectedKeywords
+        function clearAllSelections() {
+            document.querySelectorAll('.keyword-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            // 清空selectedKeywords
+            for (let category in selectedKeywords) {
+                selectedKeywords[category] = [];
+            }
+        }
+    </script>
+
+    <!-- 添加联系信息 -->
+    <div style="
+        text-align: center;
+        margin-top: 30px;
+        padding: 20px;
+        color: #666;
+        border-top: 1px solid #ddd;
+    ">
+        <p>子墨同学 微信：zimo-1376</p>
+    </div>
+</body>
+</html> 
