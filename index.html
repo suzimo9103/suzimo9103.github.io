@@ -402,13 +402,24 @@
         <div class="category-title">设计风格 / Design Style</div>
         
         <!-- 当代风格（2010s-Present）-->
+        <button class="keyword-btn" data-category="style" data-en="modern simplicity">现代简约风</button>
+        <button class="keyword-btn" data-category="style" data-en="modern minimalism">现代极简风</button>
+        <button class="keyword-btn" data-category="style" data-en="mid century">中古风</button>
+        <button class="keyword-btn" data-category="style" data-en="cream wood">奶油原木风</button>
+        <button class="keyword-btn" data-category="style" data-en="wabi sabi">侘寂风</button>
+        <button class="keyword-btn" data-category="style" data-en="song dynasty aesthetics">宋代美学</button>
+        <button class="keyword-btn" data-category="style" data-en="oriental aesthetics">东方美学</button>
+        <button class="keyword-btn" data-category="style" data-en="french nanyang">法式南洋</button>
+        <button class="keyword-btn" data-category="style" data-en="italian light luxury">意式轻奢</button>
+        <button class="keyword-btn" data-category="style" data-en="decorative style">装饰主义</button>
+        <button class="keyword-btn" data-category="style" data-en="heavy metal aesthetics">重金属美学</button>
+        <button class="keyword-btn" data-category="style" data-en="shanghai vintage">海派复古</button>
+        <button class="keyword-btn" data-category="style" data-en="bauhaus">包豪斯风</button>
+        <button class="keyword-btn" data-category="style" data-en="memphis">孟菲斯风</button>
+        <button class="keyword-btn" data-category="style" data-en="dopamine">多巴胺风</button>
+        <button class="keyword-btn" data-category="style" data-en="maillard">美拉德风</button>
+        <button class="keyword-btn" data-category="style" data-en="mondrian">蒙德里安风</button>
         <button class="keyword-btn" data-category="style" data-en="parametric design">参数化设计</button>
-        <button class="keyword-btn" data-category="style" data-en="biophilic design">生物亲和</button>
-        <button class="keyword-btn" data-category="style" data-en="cyberpunk style">赛博朋克</button>
-        <button class="keyword-btn" data-category="style" data-en="digital minimalism">数字极简</button>
-        <button class="keyword-btn" data-category="style" data-en="sustainable modern">可持续现代</button>
-        <button class="keyword-btn" data-category="style" data-en="smart luxury">智能奢华</button>
-
         <!-- 新世纪风格（2000s-2010s）-->
         <button class="keyword-btn" data-category="style" data-en="modern oriental">新东方主义</button>
         <button class="keyword-btn" data-category="style" data-en="modern chinoiserie">新中式</button>
@@ -416,7 +427,6 @@
         <button class="keyword-btn" data-category="style" data-en="japandi">日式北欧</button>
         <button class="keyword-btn" data-category="style" data-en="nordic minimalism">北欧极简</button>
         <button class="keyword-btn" data-category="style" data-en="light luxury">轻奢风格</button>
-        <button class="keyword-btn" data-category="style" data-en="modern simplicity">现代简约</button>
 
         <!-- 后现代风格（1980s-2000s）-->
         <button class="keyword-btn" data-category="style" data-en="deconstructivism">解构主义</button>
@@ -1181,16 +1191,143 @@
         </div>
         <div class="result-text">生成的提示词将显示在这里...</div>
     </div>
-    <button id="copy-btn" style="
+    <!-- 按钮组 -->
+    <div style="
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
         margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #2196F3;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s;
-">复制提示词</button>
+    ">
+        <button id="copy-btn" style="
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+            line-height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">复制提示词</button>
+        
+        <div style="
+            display: flex;
+            gap: 10px;
+        ">
+            <button id="doubao-btn" style="
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.3s;
+                min-width: 120px;
+                line-height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">豆包</button>
+            
+            <button id="yiyan-btn" style="
+                padding: 10px 20px;
+                background-color: #FF5722;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.3s;
+                min-width: 120px;
+                line-height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">文心一言</button>
+            
+            <button id="kimi-btn" style="
+                padding: 10px 20px;
+                background-color: #9C27B0;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.3s;
+                min-width: 120px;
+                line-height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">Kimi</button>
+        </div>
+    </div>
+
+    <!-- AI工具容器 -->
+    <div id="ai-container" style="
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: none;
+    ">
+        <!-- 豆包iframe -->
+        <iframe id="doubao-frame"
+            src="https://www.doubao.com/chat/"
+            style="
+                width: 100%;
+                height: 800px;
+                border: none;
+                border-radius: 4px;
+                display: none;
+            "
+            scrolling="no"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+        ></iframe>
+        
+        <!-- 文心一言iframe -->
+        <iframe id="yiyan-frame"
+            src="https://yiyan.baidu.com/"
+            style="
+                width: 100%;
+                height: 800px;
+                border: none;
+                border-radius: 4px;
+                display: none;
+            "
+            scrolling="no"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+        ></iframe>
+
+        <!-- Kimi iframe -->
+        <iframe id="kimi-frame"
+            src="https://kimi.moonshot.cn/chat/"
+            style="
+                width: 100%;
+                height: 800px;
+                border: none;
+                border-radius: 4px;
+                display: none;
+            "
+            scrolling="no"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+        ></iframe>
+
+        <!-- Kimi提示文本 -->
+        <div id="kimi-tip" style="
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+            display: none;
+        ">
+            如果想用图生文请发送图片后对他说"如果想用文生图AI生成灵感图来实现这个效果，我应该给文生图ai说些什么提示，请给我一段中文的文生图AI能够理解的提示词"
+        </div>
+    </div>
 
     <!-- 创意融合弹窗 -->
     <div id="fusion-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
@@ -1238,68 +1375,38 @@
         </div>
     </div>
 
-    <!-- 在联系信息之前添加豆包嵌入框 -->
-    <div style="
-        margin: 30px auto;
-        padding: 20px;
-        max-width: 1400px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    ">
-        <h3 style="
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 18px;
-        ">豆包 AI</h3>
-        <iframe 
-            src="https://www.doubao.com/chat/" 
-            style="
-                width: 100%;
-                height: 600px;
-                border: none;
-                border-radius: 4px;
-                background-color: white;
-            "
-        ></iframe>
-    </div>
+    <!-- 添加按钮点击事件处理 -->
+    <script>
+        const aiContainer = document.getElementById('ai-container');
+        const doubaoFrame = document.getElementById('doubao-frame');
+        const yiyanFrame = document.getElementById('yiyan-frame');
+        const kimiFrame = document.getElementById('kimi-frame');
+        const kimiTip = document.getElementById('kimi-tip');
+        
+        document.getElementById('doubao-btn').addEventListener('click', () => {
+            aiContainer.style.display = 'block';
+            doubaoFrame.style.display = 'block';
+            yiyanFrame.style.display = 'none';
+            kimiFrame.style.display = 'none';
+            kimiTip.style.display = 'none';
+        });
+        
+        document.getElementById('yiyan-btn').addEventListener('click', () => {
+            aiContainer.style.display = 'block';
+            doubaoFrame.style.display = 'none';
+            yiyanFrame.style.display = 'block';
+            kimiFrame.style.display = 'none';
+            kimiTip.style.display = 'none';
+        });
 
-    <!-- 在豆包iframe后面，联系信息之前添加以下代码 -->
-    <div style="
-        margin: 30px auto;
-        padding: 20px;
-        max-width: 1400px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    ">
-        <h3 style="
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 18px;
-        ">文心一言</h3>
-        <iframe 
-            src="https://yiyan.baidu.com/" 
-            style="
-                width: 100%;
-                height: 600px;
-                border: none;
-                border-radius: 4px;
-                background-color: white;
-            "
-        ></iframe>
-    </div>
-
-    <!-- 保持原有的联系信息 -->
-    <div style="
-        text-align: center;
-        margin-top: 30px;
-        padding: 20px;
-        color: #666;
-        border-top: 1px solid #ddd;
-    ">
-        <p>子墨同学 微信：zimo-1376</p>
-    </div>
+        document.getElementById('kimi-btn').addEventListener('click', () => {
+            aiContainer.style.display = 'block';
+            doubaoFrame.style.display = 'none';
+            yiyanFrame.style.display = 'none';
+            kimiFrame.style.display = 'block';
+            kimiTip.style.display = 'block';
+        });
+    </script>
 
     <script>
         // 添加页面加载完成后滚动到顶部的代码
