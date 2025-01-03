@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI提示词生成器 - 入口</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #041725;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Courier New', monospace;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 70%);
+            z-index: 0;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        .enter-button {
+            position: relative;
+            z-index: 2;
+            padding: 20px 40px;
+            font-size: 24px;
+            color: #fff;
+            background: transparent;
+            border: 2px solid #4df;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .enter-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(77, 255, 255, 0.6),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .enter-button:hover::before {
+            left: 100%;
+        }
+
+        .enter-button:hover {
+            box-shadow: 0 0 20px #4df, 0 0 40px #4df;
+            text-shadow: 0 0 5px #4df;
+            background: rgba(77, 255, 255, 0.1);
+        }
+
+        .enter-button::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border-radius: 10px;
+            background: radial-gradient(circle, rgba(77,255,255,0.1) 0%, rgba(77,255,255,0) 70%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .enter-button:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+    <button class="enter-button" onclick="enterSite()">开卷</button>
+
+    <script>
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        setCanvasSize();
+        window.addEventListener('resize', setCanvasSize);
+
+        // Characters to use
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function draw() {
+            // Semi-transparent black background to show trail effect
+            ctx.fillStyle = 'rgba(4, 23, 37, 0.12)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Green text
+            ctx.fillStyle = 'rgba(77, 255, 255, 0.8)';
+            ctx.font = fontSize + 'px monospace';
+
+            // Loop over drops
+            for (let i = 0; i < drops.length; i++) {
+                // Random character
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                
+                // Draw character
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                // Reset drop if it reaches bottom or randomly
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.99) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        // Animation loop
+        setInterval(draw, 25);
+
+        // Enter site function
+        function enterSite() {
+            // Add fade out effect
+            document.body.style.transition = 'opacity 0.5s';
+            document.body.style.opacity = '0';
+            
+            // Redirect after fade
+            setTimeout(() => {
+                window.location.href = 'index(4).html';
+            }, 500);
+        }
+
+        // Add glitch effect to button
+        const button = document.querySelector('.enter-button');
+        setInterval(() => {
+            if (Math.random() > 0.99) {
+                button.style.transform = `translate(${Math.random() * 2 - 1}px, ${Math.random() * 2 - 1}px)`;
+                setTimeout(() => {
+                    button.style.transform = 'translate(0, 0)';
+                }, 100);
+            }
+        }, 50);
+    </script>
+</body>
+</html>
